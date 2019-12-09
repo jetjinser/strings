@@ -130,4 +130,6 @@ dmypy.json
 
 # data & test
 test.py
+demo.py
+t.json
 string_bot/data/
