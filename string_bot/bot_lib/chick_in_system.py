@@ -4,7 +4,7 @@ import time
 
 
 def user_registration(ctx):
-    with open('../data/user.json', 'r', encoding='utf-8') as f:
+    with open(r'.\data\user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     user_id = ctx['sender']['user_id']
@@ -20,7 +20,7 @@ def user_registration(ctx):
         "last_check_in_time": ""
     }
 
-    file = open('./data/user.json', 'w', encoding='utf-8')
+    file = open(r'.\data\user.json', 'w', encoding='utf-8')
     json.dump(data, file, ensure_ascii=False, indent=4)
 
 
@@ -59,7 +59,7 @@ def coin_algorithm(favor: int, coin: int):  # favor
 
 
 def chick_in(user_id: str):
-    with open('./data/user.json', 'r', encoding='utf-8') as f:
+    with open(r'.\data\user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     details = data[str(user_id)]
@@ -67,44 +67,44 @@ def chick_in(user_id: str):
     details['user_coin'] = coin_algorithm(details['user_favor'], details['user_coin'])
     details['user_favor'] = favor_algorithm(details['check_in_days'], details['user_favor'])
     details['check_in_days'] = details['check_in_days'] + 1
+    details['last_check_in_time'] = time.asctime(time.localtime(time.time()))
 
     data[str(user_id)] = details
 
-    file = open('./data/user.json', 'w', encoding='utf-8')
+    file = open(r'.\data\user.json', 'w', encoding='utf-8')
     json.dump(data, file, ensure_ascii=False, indent=4)
 
 
 def check_in_interval_judgment(user_id: str):
-    with open('./data/user.json', 'r', encoding='utf-8') as f:
+    with open(r'.\data\user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     details = data[user_id]
 
     if details['last_check_in_time'][0: 10] != time.asctime(time.localtime(time.time()))[0: 10]:
-        details['last_check_in_time'] = time.asctime(time.localtime(time.time()))
-
-        data[user_id] = details
-
-        file = open('./data/user.json', 'w', encoding='utf-8')
-        json.dump(data, file, ensure_ascii=False, indent=4)
         return 1
     else:
         return 0
 
 
 def get_chick_info(user_id: str):
-    with open('./data/user.json', 'r', encoding='utf-8') as f:
+    with open(r'.\data\user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     return data[str(user_id)]
 
 
 def get_user_info():
-    with open('./data/user.json', 'r', encoding='utf-8') as f:
+    with open(r'.\data\user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     return data
 
 
-if __name__ == '__main__':
-    chick_in('2301583973')
+def chick_in_text(user_id: str, name: str) -> str:
+    data = get_chick_info(user_id)
+    coin = data['user_coin']
+    cid = data['check_in_days']
+    favor = data['user_favor']
+    text = f'{name}\n签 到 成 功\nCuprum {coin}\n签到天数    {cid}     好感度    {favor}'
+    return text

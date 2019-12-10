@@ -129,7 +129,8 @@ dmypy.json
 .vscode/
 
 # data & test
-test.py
+string_bot/test.py
 demo.py
 t.json
+temporary.py
 string_bot/data/

@@ -92,7 +92,7 @@ class ImageProcessing:
         target.paste(self.gaussian_blur())
 
         # 创建小图标的框架
-        framework = Image.open('../data/framework.png').convert('L')
+        framework = Image.open(r'.\data\framework.png').convert('L')
         framework = framework.resize((size + 30, size + 30))
         target_l = Image.new('RGBA', (size + 30, size + 30), (0, 0, 0, 0))
         target_l.putalpha(framework)
@@ -114,15 +114,12 @@ class ImageProcessing:
 
         # 指定文字, 文字的字体和位置
         txt = self._txt.split('\n')
-        font = ImageFont.truetype(r'../data/REEJI-HonghuangLiGB-SemiBold-2.ttf', 25)
+        font = ImageFont.truetype(r'./data/REEJI-HonghuangLiGB-SemiBold-2.ttf', 25)
         count = 0
         for i in txt:
             text_size = font.getsize(i)
             where = (
                 (self._image.size[0] - text_size[0]) / 2, (self._image.size[1] - text_size[1]) / 2 + 125 + 30 * count)
-
-            # # 取反色
-            # pix = self.coloring(where)
 
             pix = (255, 255, 255)
 
@@ -130,24 +127,19 @@ class ImageProcessing:
             draw = ImageDraw.Draw(target)
             draw.text(where, i, pix, font=font)
 
-            # # 创建文字框架
-            # txt_frame = Image.new('RGBA', (text_size[0] + 10, text_size[1] + 10), (0, 0, 0, 0))
-            # # 贴上文字框架
-            # target.paste(txt_frame, (int(where[0] - 5), int(where[1]) - 5), txt_frame)
-
             count += 1
 
         # 打开tips json文件, 选取tips
-        with open('../data/tips.json', 'r', encoding='utf-8') as file:
+        with open(r'.\data\tips.json', 'r', encoding='utf-8') as file:
             data = json.load(file)[0]
 
             num = list(data.keys())[-1]
-            ram = randint(0, int(num))
+            ram = str(randint(0, int(num)))
             writer = data[ram]
 
         # 写入tips
         draw = ImageDraw.Draw(target)
-        font = ImageFont.truetype(r'../data/REEJI-HonghuangLiGB-SemiBold-2.ttf', 20)
+        font = ImageFont.truetype(r'.\data\REEJI-HonghuangLiGB-SemiBold-2.ttf', 20)
         writer_size = font.getsize(writer)
         pix = (230, 230, 230)
         draw.text(((self._image.size[0] - writer_size[0]) / 2, 585 - 26), writer, pix, font=font)
@@ -158,4 +150,4 @@ class ImageProcessing:
         """
         保存图片
         """
-        self.process().save('../data/' + self._name + '.png')
+        self.process().save('./data/' + self._name + '.png')

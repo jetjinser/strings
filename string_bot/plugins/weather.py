@@ -22,7 +22,10 @@ async def _(session: CommandSession):
     if session.is_first_run:
         if stripped_arg:
             session.state['city'] = stripped_arg.split()[0]
-            session.state['date'] = stripped_arg.split()[1]
+            try:
+                session.state['date'] = stripped_arg.split()[1]
+            except IndexError:
+                session.state['date'] = None
         return
 
     if not stripped_arg:

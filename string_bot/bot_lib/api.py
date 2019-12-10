@@ -1,10 +1,16 @@
 from string_bot.bot_lib.shortlink import shortlink
 import requests
 import time
+import random
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+from urllib import parse
 
 
-async def get_weather_of_city(city: str, date: str) -> str:
-    if date == '明天':
+async def get_weather_of_city(city: str, date: str = None) -> str:
+    if date == '今天' or not date:
+        date = 0
+    elif date == '明天':
         date = 1
     elif date == '后天':
         date = 2
@@ -60,14 +66,71 @@ async def get_random_things() -> str:
     return formatted
 
 
-# 出错的函数
-def get_image(user_id: str) -> str:
+async def get_image(user_id: str) -> str:
     url = f'http://q1.qlogo.cn/g?b=qq&nk={user_id}&s=5'
     response = requests.get(url)
-    with open('../data/demo.jpg', 'wb') as f:
+    with open('./data/demo.jpg', 'wb') as f:
         f.write(response.content)
-    return '../data/demo.jpg'
+    return './data/demo.jpg'
 
 
-if __name__ == '__main__':
-    image = get_image('2301583973')
+async def get_today_in_history():
+    url = 'https://api.ooopn.com/history/api.php'
+    r = requests.get(url)
+    response_dict = r.json()
+    history = response_dict['content']
+    return random.choice(history)
+
+
+async def get_one_sentence_a_day():
+    url = 'https://apiv3.shanbay.com/weapps/dailyquote/quote/'
+    r = requests.get(url)
+    response_dict = r.json()
+    formatted = response_dict['content'] + '\n' + response_dict['translation']
+    return formatted
+
+
+async def get_five_sayings():
+    url = 'https://api.ooopn.com/yan/api.php'
+    r = requests.get(url)
+    response_dict = r.json()
+    return response_dict['hitokoto']
+
+
+async def get_garbage_classification(arg):
+    url = 'https://lajifenleiapp.com/sk/{}'.format(parse.quote(arg))
+    html = urlopen(url)
+    soup = BeautifulSoup(html, 'html.parser')
+    one_soup = soup.find_all('span', {'style': 'color:#643f30'})
+    two_soup = soup.find_all('span', {'style': 'color:#00447b'})
+    three_soup = soup.find_all('span', {'style': '#2e2a2b'})
+    four_soup = soup.find_all('span', {'style': 'color:#e23322'})
+    if one_soup + two_soup + three_soup + four_soup:
+        for i in one_soup + two_soup + three_soup + four_soup:
+            return i.get_text()
+    else:
+        return 'buzhidao'
+
+
+async def get_a_joke():
+    url = 'https://www.mxnzp.com/api/jokes/list/random'
+    r = requests.get(url)
+    response_dict = r.json()
+    data = response_dict['data']
+    one_joke = random.choice(data)['content']
+    return one_joke
+
+
+async def get_news():
+    url = 'http://c.m.163.com/nc/article/headline/T1348647853363/0-40.html'
+    r = requests.get(url)
+    response_dict = r.json()
+    b = response_dict['T1348647853363']
+    n = random.choice(b)
+    content = '【' + n['source'] + n['ptime'] + '】\n    ' + n['title'] + '\n    ' + n[
+        'digest'] + '...\n'
+    if n['url_3w']:
+        content += n['url_3w']
+    else:
+        content += '暂无数据'
+    return content
