@@ -1,4 +1,4 @@
-from string_bot.bot_lib.shortlink import shortlink
+from bot_lib.shortlink import shortlink
 import requests
 import time
 import random

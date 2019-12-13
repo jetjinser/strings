@@ -1,5 +1,5 @@
 from nonebot import CommandGroup, CommandSession
-from string_bot.bot_lib.api import get_baidu_url, get_bing_url
+from bot_lib.api import get_baidu_url, get_bing_url
 from urllib import parse
 
 __plugin_name__ = '搜索'

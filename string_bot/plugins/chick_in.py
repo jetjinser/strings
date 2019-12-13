@@ -1,7 +1,7 @@
 from nonebot import CommandGroup, CommandSession
-from string_bot.bot_lib.chick_in_system import *
-from string_bot.bot_lib.check_in_image import *
-from string_bot.bot_lib.api import get_image
+from bot_lib.chick_in_system import *
+from bot_lib.check_in_image import *
+from bot_lib.api import get_image
 
 __plugin_name__ = '签到'
 

@@ -1,7 +1,7 @@
 from nonebot import CommandGroup, CommandSession
 import random
 import shlex
-from string_bot.bot_lib.api import get_random_things
+from bot_lib.api import get_random_things
 
 __plugin_name__ = '随机'
 

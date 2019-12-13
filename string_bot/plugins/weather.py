@@ -1,5 +1,5 @@
 from nonebot import CommandSession, CommandGroup
-from string_bot.bot_lib.api import get_weather_of_city
+from bot_lib.api import get_weather_of_city
 
 a_list = ['天气', '查天气', '今天什么天气', '明天什么天气', '后天什么天气', '最近什么天气', '最近天气怎么样', '今天天气怎么样',
           '明天天气怎么样', '最近天气怎么样', '后天天气怎么样']
