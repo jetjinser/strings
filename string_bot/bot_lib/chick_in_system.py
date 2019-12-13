@@ -4,7 +4,7 @@ import time
 
 
 def user_registration(ctx):
-    with open(r'.\data\user.json', 'r', encoding='utf-8') as f:
+    with open('./data/user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     user_id = ctx['sender']['user_id']
@@ -20,7 +20,7 @@ def user_registration(ctx):
         "last_check_in_time": ""
     }
 
-    file = open(r'.\data\user.json', 'w', encoding='utf-8')
+    file = open('./data/user.json', 'w', encoding='utf-8')
     json.dump(data, file, ensure_ascii=False, indent=4)
 
 
@@ -59,7 +59,7 @@ def coin_algorithm(favor: int, coin: int):  # favor
 
 
 def chick_in(user_id: str):
-    with open(r'.\data\user.json', 'r', encoding='utf-8') as f:
+    with open('./data/user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     details = data[str(user_id)]
@@ -71,12 +71,12 @@ def chick_in(user_id: str):
 
     data[str(user_id)] = details
 
-    file = open(r'.\data\user.json', 'w', encoding='utf-8')
+    file = open('./data/user.json', 'w', encoding='utf-8')
     json.dump(data, file, ensure_ascii=False, indent=4)
 
 
 def check_in_interval_judgment(user_id: str):
-    with open(r'.\data\user.json', 'r', encoding='utf-8') as f:
+    with open('./data/user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     details = data[user_id]
@@ -88,14 +88,14 @@ def check_in_interval_judgment(user_id: str):
 
 
 def get_chick_info(user_id: str):
-    with open(r'.\data\user.json', 'r', encoding='utf-8') as f:
+    with open('./data/user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     return data[str(user_id)]
 
 
 def get_user_info():
-    with open(r'.\data\user.json', 'r', encoding='utf-8') as f:
+    with open('./data/user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     return data
