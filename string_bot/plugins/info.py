@@ -1,5 +1,5 @@
 from nonebot import CommandGroup, CommandSession
-from string_bot.bot_lib import api
+from bot_lib import api
 
 __plugin_name__ = '信息'
 

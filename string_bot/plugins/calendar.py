@@ -1,5 +1,5 @@
 from nonebot import CommandGroup, CommandSession
-from string_bot.bot_lib.api import get_calendar
+from bot_lib.api import get_calendar
 from datetime import date, timedelta
 
 __plugin_name__ = '日历'
