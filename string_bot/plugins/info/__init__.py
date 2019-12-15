@@ -22,7 +22,7 @@ async def info_one_sentence_a_day(session: CommandSession):
     await session.send(msg)
 
 
-@cg.command('five_sayings', aliases=['five语录', '废物语录'])
+@cg.command('five_sayings', aliases=['five语录', '废物语录', '二次元语录'])
 async def info_five_sayings(session: CommandSession):
     msg = await get_five_sayings()
     await session.send(msg)
@@ -74,10 +74,11 @@ async def info_steam(session: CommandSession):
     await session.send(msg)
 
 
-@cg.command('steam_list', aliases=['steam sale list', 'steam促销列表', 'steam优惠列表'])
-async def info_steam(session: CommandSession):
-    msg = await get_steam_sale_list()
-    await session.send(msg)
+# 下次一定
+# @cg.command('steam_list', aliases=['steam sale list', 'steam促销列表', 'steam优惠列表'])
+# async def info_steam(session: CommandSession):
+#     msg = await get_steam_sale_list()
+#     await session.send(msg)
 
 
 # 垃圾分类的参数处理器

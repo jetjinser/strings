@@ -146,28 +146,27 @@ async def get_steam_sale() -> str:
 
     return msg
 
-
-async def get_steam_sale_list() -> str:
-    header = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                      'Chrome/79.0.3945.79 Safari/537.36'}
-
-    resp = requests.get('http://www.vgtime.com/steam/steamapi.php?saleType=PROMOTIONAL+PRICE', headers=header)
-
-    resp = resp.json()
-
-    # count = resp['count']
-    data = resp['data']
-
-    msg = '\n'
-    for _ in range(5):
-        detail = random.choice(data)
-        formatted = (
-              detail['name'] + '   ' + detail['saleRate'] + '\n原价: ￥' + detail['oldPrice'] + '   现价: ￥' +
-              detail['nowPrice'] + '\n平台: ' + detail['platform'] + '\n' + detail['rateInfo'].replace('<br>', '  ') +
-              f'https://store.steampowered.com/app/{detail["aid"]}'
-        )
-        msg.join(formatted)
-
-    print(msg)
-    return str(msg)
+# 下次一定
+# async def get_steam_sale_list() -> str:
+#     header = {
+#         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+#                       'Chrome/79.0.3945.79 Safari/537.36'}
+#
+#     resp = requests.get('http://www.vgtime.com/steam/steamapi.php?saleType=PROMOTIONAL+PRICE', headers=header)
+#
+#     resp = resp.json()
+#
+#     # count = resp['count']
+#     data = resp['data']
+#
+#     msg = '\n'
+#     detail = random.choice(data, seq=3)
+#     formatted = (
+#           detail['name'] + '   ' + detail['saleRate'] + '\n原价: ￥' + detail['oldPrice'] + '   现价: ￥' +
+#           detail['nowPrice'] + '\n平台: ' + detail['platform'] + '\n' + detail['rateInfo'].replace('<br>', '  ') +
+#           f'https://store.steampowered.com/app/{detail["aid"]}'
+#     )
+#     msg.join(formatted)
+#
+#     print(msg)
+#     return str(msg)
