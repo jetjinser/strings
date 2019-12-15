@@ -1,9 +1,13 @@
 from nonebot import CommandGroup, CommandSession
-from bot_lib.chick_in_system import *
-from bot_lib.check_in_image import *
-from bot_lib.api import get_image
+from .chick_in_system import *
+from .check_in_image import ImageProcessing
+from .data_source import get_image
 
 __plugin_name__ = '签到'
+__plugin_usage__ = r"""签到服务
+
+指令: 签到 / 注册"""
+
 
 cg = CommandGroup('chick_in', only_to_me=False)
 
@@ -12,7 +16,7 @@ cg = CommandGroup('chick_in', only_to_me=False)
 async def registered(session: CommandSession):
     user_id = session.ctx['sender']['user_id']
     data = get_user_info()
-    if user_id not in data.keys():
+    if str(user_id) not in list(data.keys()):
         user_registration(session.ctx)
         await session.send('注册成功!')
     else:
@@ -24,8 +28,10 @@ async def chick_in_cmd(session: CommandSession):
     try:
         uid = session.ctx['sender']['user_id']
         uid = str(uid)
-    
+
         if check_in_interval_judgment(uid):
+
+            chick_in(uid)
 
             # image = await get_image(uid)
 
@@ -38,8 +44,6 @@ async def chick_in_cmd(session: CommandSession):
 
             # image = ImageProcessing(image, text, 256, 'send')
             # image.save()
-
-            chick_in(uid)
 
             # 不抛异常, 但是没有酷Q pro就无法发图
             # 无法直接捕获异常

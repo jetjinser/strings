@@ -4,6 +4,10 @@ import urllib.parse
 import json
 
 __plugin_name__ = '翻译'
+__plugin_usage__ = r"""翻译服务
+
+指令: 翻译 ([翻译内容])"""
+
 
 cg = CommandGroup('translate', only_to_me=False)
 

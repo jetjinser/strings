@@ -1,9 +1,13 @@
 from nonebot import CommandGroup, CommandSession
 import random
 import shlex
-from bot_lib.api import get_random_things
+from .data_source import get_random_things
 
 __plugin_name__ = '随机'
+__plugin_usage__ = r"""有关随机
+
+指令: 随机数 / 打乱 / 抽签 / 找点乐子"""
+
 
 cg = CommandGroup('random', only_to_me=False)
 

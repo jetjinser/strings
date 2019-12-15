@@ -9,7 +9,7 @@ def user_registration(ctx):
 
     user_id = ctx['sender']['user_id']
     user_nickname = ctx['sender']['nickname']
-    user_card = ctx['sender']['card']
+    user_card = ctx.get('sender').get('card')
 
     data[str(user_id)] = {
         "user_nickname": user_nickname,
@@ -62,14 +62,14 @@ def chick_in(user_id: str):
     with open('./data/user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
-    details = data[str(user_id)]
+    details = data[user_id]
 
     details['user_coin'] = coin_algorithm(details['user_favor'], details['user_coin'])
     details['user_favor'] = favor_algorithm(details['check_in_days'], details['user_favor'])
     details['check_in_days'] = details['check_in_days'] + 1
     details['last_check_in_time'] = time.asctime(time.localtime(time.time()))
 
-    data[str(user_id)] = details
+    data[user_id] = details
 
     file = open('./data/user.json', 'w', encoding='utf-8')
     json.dump(data, file, ensure_ascii=False, indent=4)
@@ -91,7 +91,7 @@ def get_chick_info(user_id: str):
     with open('./data/user.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
-    return data[str(user_id)]
+    return data[user_id]
 
 
 def get_user_info():

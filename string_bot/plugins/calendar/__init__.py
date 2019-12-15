@@ -1,8 +1,12 @@
 from nonebot import CommandGroup, CommandSession
-from bot_lib.api import get_calendar
+from .data_source import get_calendar
 from datetime import date, timedelta
 
 __plugin_name__ = '日历'
+__plugin_usage__ = r"""获取日历
+
+指令: 日历 / 今日历"""
+
 
 cg = CommandGroup('calendar', only_to_me=False)
 
