@@ -2,6 +2,7 @@ from nonebot import CommandGroup, CommandSession
 from .chick_in_system import *
 from .check_in_image import ImageProcessing
 from .data_source import get_image
+from shutil import copyfile
 
 __plugin_name__ = '签到'
 __plugin_usage__ = r"""签到服务
@@ -50,7 +51,9 @@ async def chick_in_cmd(session: CommandSession):
             # air时用:
             # await session.send(text)
             # pro时用:
-            await session.send('[CQ:image,file=send.png]')
+            # 把这个文件复制到docker挂载的coolq的文件夹里才能识别到
+            copyfile('data/send.png', '/home/ubuntu/coolq-pro/data/send.png')
+            await session.send('[CQ:image,file=file:///data/send.png]')
         else:
             await session.send('您今天已经签到过了')
     except KeyError:
