@@ -16,7 +16,7 @@
   - [scp](https://github.com/jinserrr/strings/blob/master/README.md#scp)
   - [信息](https://github.com/jinserrr/strings/blob/master/README.md#信息)
 - [Thanks](https://github.com/jinserrr/strings/blob/master/README.md#Thanks)
-  - [以下是在开发过程中给予帮助的~~群友~~朋友们](https://github.com/jinserrr/strings/blob/master/README.md#以下是在开发过程中给予帮助的~~群友~~朋友们)
+  - [感谢](https://github.com/jinserrr/strings/blob/master/README.md#以下是在开发过程中给予帮助的~~群友~~朋友们)
   - [捐赠列表（按时间先后顺序）](https://github.com/jinserrr/strings/blob/master/README.md#捐赠列表（按时间先后顺序）)
 - [捐赠入口](https://github.com/jinserrr/strings/blob/master/README.md#捐赠入口)
 
