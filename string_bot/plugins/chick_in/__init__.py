@@ -33,7 +33,7 @@ async def chick_in_cmd(session: CommandSession):
 
             chick_in(uid)
 
-            # image = await get_image(uid)
+            image = await get_image(uid)
 
             card = session.ctx.get('sender').get('card')
             if card:
@@ -42,15 +42,15 @@ async def chick_in_cmd(session: CommandSession):
                 nickname = session.ctx['sender']['nickname']
                 text = chick_in_text(uid, nickname)
 
-            # image = ImageProcessing(image, text, 256, 'send')
-            # image.save()
+            image = ImageProcessing(image, text, 256, 'send')
+            image.save()
 
             # 不抛异常, 但是没有酷Q pro就无法发图
             # 无法直接捕获异常
             # air时用:
-            await session.send(text)
+            # await session.send(text)
             # pro时用:
-            # await session.send('[CQ:image,file=send.png]')
+            await session.send('[CQ:image,file=send.png]')
         else:
             await session.send('您今天已经签到过了')
     except KeyError:

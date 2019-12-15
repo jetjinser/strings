@@ -114,7 +114,7 @@ class ImageProcessing:
 
         # 指定文字, 文字的字体和位置
         txt = self._txt.split('\n')
-        font = ImageFont.truetype('./data/FZKTJW.TTF', 24)
+        font = ImageFont.truetype('./data/REEJI-HonghuangLiGB-SemiBold-2.ttf', 24)
         count = 0
         for i in txt:
             text_size = font.getsize(i)
@@ -139,7 +139,7 @@ class ImageProcessing:
 
         # 写入tips
         draw = ImageDraw.Draw(target)
-        font = ImageFont.truetype('./data/FZKTJW.TTF', 18)
+        font = ImageFont.truetype('./data/REEJI-HonghuangLiGB-SemiBold-2.ttf', 18)
         writer_size = font.getsize(writer)
         pix = (230, 230, 230)
         draw.text(((self._image.size[0] - writer_size[0]) / 2, 585 - 26), writer, pix, font=font)
