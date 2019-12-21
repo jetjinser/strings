@@ -5,16 +5,16 @@ import sqlite3
 
 # 用户注册函数
 def user_registration(ctx):
-    coon = sqlite3.connect(r'.\data\user.db')
+    coon = sqlite3.connect(r'.\data\data.db')
     cursor = coon.cursor()
 
     user_id = ctx['sender']['user_id']
     user_nickname = ctx['sender']['nickname']
-    user_card = ctx.get('sender').get('card')
+    user_card = ctx.get('sender').get('card') if ctx.get('sender').get('card') else 'NULL'
 
     sql_insert = (
         'INSERT INTO user VALUES ('
-        f'NULL, {user_id}, \'{user_nickname}\', {user_card}, {0}, {0}, {0}, date(\'now\',\'+1 day\'));'
+        f'NULL, {user_id}, \'{user_nickname}\', {user_card}, {0}, {0}, {0}, \'2019-01-01\');'
     )
 
     cursor.execute(sql_insert)
@@ -62,7 +62,7 @@ def coin_algorithm(favor: int, coin: int):  # favor
 
 # 签到函数
 def chick_in(user_id: int):
-    coon = sqlite3.connect(r'.\data\user.db')
+    coon = sqlite3.connect(r'.\data\data.db')
     cursor = coon.cursor()
 
     data = get_chick_info(user_id)
@@ -70,16 +70,21 @@ def chick_in(user_id: int):
     user_favor = data[5]
     chick_in_days = data[6]
 
+    up_user_coin = coin_algorithm(user_favor, user_coin)
+    up_user_favor = favor_algorithm(chick_in_days, user_favor)
+    up_chick_in_days = chick_in_days + 1
+    up_last_chick_in_time = datetime.today().strftime("%Y-%m-%d")
+
     sql_update = (
         'UPDATE user SET '
-        f'user_coin = {coin_algorithm(user_favor, user_coin)},'
-        f'user_favor = {favor_algorithm(chick_in_days, user_favor)},'
-        f'chick_in_days = {chick_in_days + 1},'
-        f'last_chick_in_time = date(\'now\',\'+1 day\') '
-        f'WHERE user_id = {user_id};'
+        'user_coin = ?,'
+        f'user_favor = ?,'
+        f'chick_in_days = ?,'
+        f'last_chick_in_time = ? '
+        f'WHERE user_id = ?;'
     )
 
-    cursor.execute(sql_update)
+    cursor.execute(sql_update, (up_user_coin, up_user_favor, up_chick_in_days, up_last_chick_in_time, user_id))
 
     cursor.close()
     coon.commit()
@@ -88,7 +93,7 @@ def chick_in(user_id: int):
 
 # 验证是否在一天内重复签到
 def check_in_interval_judgment(user_id: int):
-    coon = sqlite3.connect(r'.\data\user.db')
+    coon = sqlite3.connect(r'.\data\data.db')
     cursor = coon.cursor()
 
     sql_select = (
@@ -111,7 +116,7 @@ def check_in_interval_judgment(user_id: int):
 
 
 def get_chick_info(user_id: int):
-    coon = sqlite3.connect(r'.\data\user.db')
+    coon = sqlite3.connect(r'.\data\data.db')
     cursor = coon.cursor()
 
     sql_select = (
@@ -130,7 +135,7 @@ def get_chick_info(user_id: int):
 
 
 def user_registration_interval_judgment(user_id):
-    coon = sqlite3.connect(r'.\data\user.db')
+    coon = sqlite3.connect(r'.\data\data.db')
     cursor = coon.cursor()
 
     sql_select = (

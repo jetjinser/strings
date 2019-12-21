@@ -54,5 +54,5 @@ async def chick_in_cmd(session: CommandSession):
             await session.send('[CQ:image,file=file:///data/send.png]')
         else:
             await session.send('您今天已经签到过了')
-    except KeyError:
+    except IndexError:
         await session.finish('请发送"注册"  来完成注册!')

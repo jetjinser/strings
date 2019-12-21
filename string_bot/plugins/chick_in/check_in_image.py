@@ -1,6 +1,5 @@
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
-from random import randint
-import json
+import sqlite3
 
 
 class ImageProcessing:
@@ -129,20 +128,27 @@ class ImageProcessing:
 
             count += 1
 
-        # 打开tips json文件, 选取tips
-        with open('./data/tips.json', 'r', encoding='utf-8') as file:
-            data = json.load(file)[0]
+        coon = sqlite3.connect(r'.\data\data.db')
 
-            num = list(data.keys())[-1]
-            ram = str(randint(0, int(num)))
-            writer = data[ram]
+        cursor = coon.cursor()
+
+        sql_select = (
+            'SELECT tips FROM tips ORDER BY RANDOM() limit 1;'
+        )
+
+        cursor.execute(sql_select)
+        values = str(cursor.fetchall()[0][0])
+
+        cursor.close()
+        coon.commit()
+        coon.close()
 
         # 写入tips
         draw = ImageDraw.Draw(target)
         font = ImageFont.truetype('./data/FZKTJW.TTF', 18)
-        writer_size = font.getsize(writer)
+        writer_size = font.getsize(values)
         pix = (230, 230, 230)
-        draw.text(((self._image.size[0] - writer_size[0]) / 2, 585 - 26), writer, pix, font=font)
+        draw.text(((self._image.size[0] - writer_size[0]) / 2, 585 - 26), values, pix, font=font)
 
         return target
 

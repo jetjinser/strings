@@ -1,4 +1,5 @@
 from nonebot import CommandGroup, CommandSession
+from datetime import date, timedelta
 from .data_source import *
 
 __plugin_name__ = '信息'
@@ -28,6 +29,19 @@ async def info_five_sayings(session: CommandSession):
     await session.send(msg)
 
 
+@cg.command('one_day', aliases=['日历'])
+async def one_day(session: CommandSession):
+    date = session.get('date', prompt='你想查哪一天的日历(20190101)?')
+    msg = await get_calendar(date)
+    await session.send(str(msg))
+
+
+@cg.command('today', aliases=['今日历'])
+async def one_day(session: CommandSession):
+    msg = await get_calendar()
+    await session.send(str(msg))
+
+
 # **是什么垃圾
 @cg.command('garbage_classification', aliases=['垃圾分类', '分类'])
 async def info_garbage_classification(session: CommandSession):
@@ -51,8 +65,8 @@ async def info_news(session: CommandSession):
 @cg.command('weather', aliases=['天气', '查天气', '最近什么天气', '最近天气怎么样'])
 async def info_weather(session: CommandSession):
     city = session.get('city', prompt='你想查哪个城市?')
-    date = session.get('date', prompt='你想查哪一天?')
-    msg = await get_weather_of_city(city, date)
+    the_date = session.get('date', prompt='你想查哪一天?')
+    msg = await get_weather_of_city(city, the_date)
     await session.send(msg)
 
 
@@ -71,6 +85,13 @@ async def info_gank(session: CommandSession):
 @cg.command('steam', aliases=['steam sale', 'steam促销', 'steam优惠'])
 async def info_steam(session: CommandSession):
     msg = await get_steam_sale()
+    await session.send(msg)
+
+
+@cg.command('isbn', aliases=['isbn', 'isbn查询', 'ISBN', 'ISBN查询', '书号查询'])
+async def info_isbn(session: CommandSession):
+    isbn = session.get('isbn', prompt='请输入要查询的书号')
+    msg = await get_isbn_book(isbn)
     await session.send(msg)
 
 
@@ -106,15 +127,55 @@ async def _(session: CommandSession):
         if stripped_arg:
             session.state['city'] = stripped_arg.split()[0]
             try:
-                session.state['date'] = stripped_arg.split()[1]
+                session.state['the_date'] = stripped_arg.split()[1]
             except IndexError:
-                session.state['date'] = None
+                session.state['the_date'] = None
         return
 
     if not stripped_arg:
-        if session.state.get('date'):
+        if session.state.get('the_date'):
             session.pause('要查询的城市名称不能为空呢，请重新输入')
 
         session.pause('要查询的日期不能为空呢，请重新输入')
+
+    session.state[session.current_key] = stripped_arg
+
+
+# 日历的参数处理器
+@one_day.args_parser
+async def _(session: CommandSession):
+    stripped_arg = session.current_arg_text.strip()
+
+    if session.is_first_run:
+        if stripped_arg:
+            if stripped_arg == '明天' or stripped_arg == '后天':
+                if stripped_arg == '明天':
+                    days = 1
+                elif stripped_arg == '后天':
+                    days = 2
+                the_day = date.today() + timedelta(days)
+                current_arg_text = the_day
+                session.state['date'] = current_arg_text
+            session.state['date'] = session.current_arg_text
+        return
+
+    if not stripped_arg:
+        session.pause('要查询的内容不能为空')
+
+    session.state[session.current_key] = stripped_arg
+
+
+# ISBN查询的参数处理器
+@info_isbn.args_parser
+async def _(session: CommandSession):
+    stripped_arg = session.current_arg_text.strip()
+
+    if session.is_first_run:
+        if stripped_arg:
+            session.state['isbn'] = stripped_arg.split()[0]
+        return
+
+    if not stripped_arg:
+        session.pause('查啥啊')
 
     session.state[session.current_key] = stripped_arg

@@ -15,6 +15,7 @@
   - [搜索](https://github.com/jinserrr/strings/blob/master/README.md#搜索)
   - [scp](https://github.com/jinserrr/strings/blob/master/README.md#scp)
   - [信息](https://github.com/jinserrr/strings/blob/master/README.md#信息)
+  - [tips](https://github.com/jinserrr/strings/blob/master/README.md#tips)
 - [Thanks](https://github.com/jinserrr/strings/blob/master/README.md#Thanks)
   - [感谢](https://github.com/jinserrr/strings/blob/master/README.md#以下是在开发过程中给予帮助的~~群友~~朋友们)
   - [捐赠列表（按时间先后顺序）](https://github.com/jinserrr/strings/blob/master/README.md#捐赠列表（按时间先后顺序）)
@@ -258,16 +259,55 @@
 - ##### steam sale
 
   - 指令：**steam sale** / **steam促销** / **steam优惠**
-
   - 参数：无
-
   - 例子：**steam优惠**
-
   - 会话：否
-
   - 说明：随机返回一条steam优惠信息
+#### tips
 
-    
+- ##### 提交tips
+
+  - 指令：**提交tips** / **tips提交** / **提交**
+  - 参数：要提交的tips
+  - 例子：**提交 肚子饿了**
+  - 会话：是
+  - 说明：tips即签到图下的小字。向服务器提交一条tip，待审核后即加入数据库。消耗 **20** 铜币
+
+- ##### 删除tips
+
+  - 指令：**删除tips** / **tips删除** / **删除**
+  - 参数：已提交的 正在审核中的 要删除的 **tips的id**
+  - 例子：**删除 33** / **删除**
+  - 会话：是
+  - 说明：删除一条 已提交的 正在审核中的 要删除的 tip
+
+- ##### 修改tips
+
+  - 指令：**修改tips** / **tips修改** / **修改**
+  - 参数：要修改的已提交的 **tips的id** 和 **tips**
+  - 例子：**修改 12** / **修改tips**
+  - 会话：是
+  - 说明：修改已提交的一条tip。消耗 **5** 铜币
+  
+- ##### 查询tips
+
+  - 指令：**check** / **查询tips** / **tips查询**
+  - 参数：无
+  - 例子：**查询tips**
+  - 会话：否
+  - 说明：查询 已经提交的 正在审核中的 tips
+
+- ##### 历史提交
+
+  - 指令：**历史提交tips** / **tips历史提交** / **历史提交**
+  - 参数：无
+  - 例子：**历史提交**
+  - 会话：否
+  - 说明：查看所有提交过的tips
+
+
+
+
 
 ***解释***：**会话** 即 **交互式对话**，可以将 **指令** 和 **参数** 分开输入。形式如下：
 
@@ -297,6 +337,8 @@
 #### 以下是在开发过程中给予帮助的~~群友~~朋友们
 
 ​	由于人数过多不能全部列出，排名不分先后
+
+- 插件开发者：[rc](https://github.com/richardchien)
 
 - 服务器提供 + 技术支持：[柚子君](https://github.com/zhufree)
 - ~~水群~~给予我帮助的群友们

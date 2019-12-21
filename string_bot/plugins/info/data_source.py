@@ -3,6 +3,7 @@ import random
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from urllib import parse
+import time
 
 
 async def get_today_in_history():
@@ -84,11 +85,11 @@ async def get_weather_of_city(city: str, date: str = None) -> str:
         resp = r.json()
         dialect = resp['data']['forecast'][date]
         formatted = (
-                    resp['data']['city'] + '  ' + dialect['type'] + '  ' + dialect['date'] + '\n' + '当前温度 '
-                    + resp['data']['wendu'] + '℃' + '\n' + dialect['fengxiang'] + '  '
-                    + dialect['fengli'].lstrip('<![CDATA[').rstrip(']]>') + '\n' + '最高温度' + dialect['high'][3:]
-                    + '\n' + '最低温度' + dialect['low'][3:] + '\n' +
-                    resp['data']['ganmao']
+                resp['data']['city'] + '  ' + dialect['type'] + '  ' + dialect['date'] + '\n' + '当前温度 '
+                + resp['data']['wendu'] + '℃' + '\n' + dialect['fengxiang'] + '  '
+                + dialect['fengli'].lstrip('<![CDATA[').rstrip(']]>') + '\n' + '最高温度' + dialect['high'][3:]
+                + '\n' + '最低温度' + dialect['low'][3:] + '\n' +
+                resp['data']['ganmao']
         )
     except KeyError:
         return 'error,无数据或语法错误'
@@ -139,10 +140,44 @@ async def get_steam_sale() -> str:
 
     detail = random.choice(data)
     msg = (
-          detail['name'] + '   ' + detail['saleRate'] + '\n原价: ￥' + detail['oldPrice'] + '   现价: ￥' +
-          detail['nowPrice'] + '\n平台: ' + detail['platform'] + '\n' + detail['rateInfo'].replace('<br>', '  ') +
-          f'https://store.steampowered.com/app/{detail["aid"]}'
+            detail['name'] + '   ' + detail['saleRate'] + '\n原价: ￥' + detail['oldPrice'] + '   现价: ￥' +
+            detail['nowPrice'] + '\n平台: ' + detail['platform'] + '\n' + detail['rateInfo'].replace('<br>', '  ') +
+            f'https://store.steampowered.com/app/{detail["aid"]}'
     )
+
+    return msg
+
+
+async def get_calendar(date: str = time.strftime('%Y%m%d', time.localtime(time.time()))) -> str:
+    url = f'https://www.mxnzp.com/api/holiday/single/{date}'
+    r = requests.get(url)
+    response_dict = r.json()
+    dialect = response_dict['data']
+    formatted = dialect['date'] + '  ' + '农历' + dialect['lunarCalendar'] + '  ' + dialect['solarTerms'] + '  ' + \
+                dialect['typeDes'] + '\n' + '今年是' + dialect['yearTips'] + dialect[
+                    'chineseZodiac'] + '年' + '  ' + '今日星座是' + dialect['constellation'] + '\n' + '今天是本年度第' + str(
+        dialect['weekOfYear']) + '周 第' + str(dialect['dayOfYear']) + '天\n' + '宜 ' + dialect['suit'] + \
+                '\n忌 ' + dialect['avoid']
+    return formatted
+
+
+async def get_isbn_book(isbn):
+    url = f'https://api.isoyu.com/books/isbn/?isbn={isbn}'
+    resp = requests.get(url)
+    data = resp.json()
+    try:
+        if data['page'] != '未知':
+            msg = (
+                    '《' + data['title'] + '》  ' + data['description'] + '\n作者：' + data['author'][0]['name'] + '  ' +
+                    data['designed'] + '\n' + data['page'][1:] + '页 ' + data['price'] + ' ' + data['published']
+            )
+        else:
+            msg = (
+                    '《' + data['title'] + '》  ' + data['description'] + '\n作者：' + data['author'][0]['name'] + '  ' +
+                    data['designed'] + '\n' + '页数未知' + data['price'] + ' ' + data['published']
+            )
+    except TypeError:
+        msg = '无数据，请确认ISBN正确'
 
     return msg
 
