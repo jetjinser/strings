@@ -162,3 +162,13 @@ def chick_in_text(user_id: int, name: str) -> str:
     cid = data[6]
     text = f'{name}\n签 到 成 功\nCuprum {coin}\n签到天数    {cid}     好感度    {favor}'
     return text
+
+
+def get_chick_in_check(user_id: int) -> str:
+    data = get_chick_info(user_id)
+    name = data[2]
+    coin = data[4]
+    favor = data[5]
+    cid = data[6]
+    text = f'{name}\nCuprum {coin}\n签到天数    {cid}     好感度    {favor}'
+    return text

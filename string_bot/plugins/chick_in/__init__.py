@@ -32,7 +32,7 @@ async def chick_in_cmd(session: CommandSession):
 
             chick_in(uid)
 
-            image = await get_image(uid)
+            image = get_image(uid)
 
             card = session.ctx.get('sender').get('card')
             if card:
@@ -47,12 +47,23 @@ async def chick_in_cmd(session: CommandSession):
             # 不抛异常, 但是没有酷Q pro就无法发图
             # 无法直接捕获异常
             # air时用:
-            # await session.send(text)
+            await session.send(text)
             # pro时用:
             # 把这个文件复制到docker挂载的coolq的文件夹里才能识别到
-            copyfile('data/send.png', '/home/ubuntu/coolq-pro/data/send.png')
-            await session.send('[CQ:image,file=file:///data/send.png]')
+            # copyfile('data/send.png', '/home/ubuntu/coolq-pro/data/send.png')
+            # await session.send('[CQ:image,file=file:///data/send.png]')
         else:
             await session.send('您今天已经签到过了')
     except IndexError:
         await session.finish('请发送"注册"  来完成注册!')
+
+
+@cg.command('chick_in_check', aliases=['查询', '个人信息'])
+async def chick_in_check(session: CommandSession):
+    user_id = session.ctx['sender']['user_id']
+
+    try:
+        msg = get_chick_in_check(user_id)
+        await session.send(msg)
+    except IndexError:
+        await session.send('您还没有注册')
