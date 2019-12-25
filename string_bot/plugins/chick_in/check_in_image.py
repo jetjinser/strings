@@ -128,7 +128,7 @@ class ImageProcessing:
 
             count += 1
 
-        coon = sqlite3.connect(r'.\data\data.db')
+        coon = sqlite3.connect('./data/data.db')
 
         cursor = coon.cursor()
 
