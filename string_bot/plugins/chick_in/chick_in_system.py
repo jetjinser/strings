@@ -1,29 +1,30 @@
-import json
 from random import randint
-import time
+from datetime import datetime
+import sqlite3
 
 
+# 用户注册函数
 def user_registration(ctx):
-    with open('./data/user.json', 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    coon = sqlite3.connect(r'.\data\data.db')
+    cursor = coon.cursor()
 
     user_id = ctx['sender']['user_id']
     user_nickname = ctx['sender']['nickname']
-    user_card = ctx.get('sender').get('card')
+    user_card = ctx.get('sender').get('card') if ctx.get('sender').get('card') else 'NULL'
 
-    data[str(user_id)] = {
-        "user_nickname": user_nickname,
-        "user_card": user_card,
-        "user_coin": 0,
-        "user_favor": 0,
-        "check_in_days": 0,
-        "last_check_in_time": ""
-    }
+    sql_insert = (
+        'INSERT INTO user VALUES ('
+        f'NULL, {user_id}, \'{user_nickname}\', {user_card}, {0}, {0}, {0}, \'2019-01-01\');'
+    )
 
-    file = open('./data/user.json', 'w', encoding='utf-8')
-    json.dump(data, file, ensure_ascii=False, indent=4)
+    cursor.execute(sql_insert)
+
+    cursor.close()
+    coon.commit()
+    coon.close()
 
 
+# 用户好感算法
 def favor_algorithm(cid: int, favor: int):  # check_in_days, favor
     if cid <= 10:
         return favor + randint(1, 2)
@@ -41,6 +42,7 @@ def favor_algorithm(cid: int, favor: int):  # check_in_days, favor
         return favor + randint(5, 10)
 
 
+# 用户铜币算法
 def coin_algorithm(favor: int, coin: int):  # favor
     if favor <= 10:
         return coin + randint(10, 20)
@@ -58,53 +60,115 @@ def coin_algorithm(favor: int, coin: int):  # favor
         return coin + randint(50, 100)
 
 
-def chick_in(user_id: str):
-    with open('./data/user.json', 'r', encoding='utf-8') as f:
-        data = json.load(f)
+# 签到函数
+def chick_in(user_id: int):
+    coon = sqlite3.connect(r'.\data\data.db')
+    cursor = coon.cursor()
 
-    details = data[user_id]
-
-    details['user_coin'] = coin_algorithm(details['user_favor'], details['user_coin'])
-    details['user_favor'] = favor_algorithm(details['check_in_days'], details['user_favor'])
-    details['check_in_days'] = details['check_in_days'] + 1
-    details['last_check_in_time'] = time.asctime(time.localtime(time.time()))
-
-    data[user_id] = details
-
-    file = open('./data/user.json', 'w', encoding='utf-8')
-    json.dump(data, file, ensure_ascii=False, indent=4)
-
-
-def check_in_interval_judgment(user_id: str):
-    with open('./data/user.json', 'r', encoding='utf-8') as f:
-        data = json.load(f)
-
-    details = data[user_id]
-
-    if details['last_check_in_time'][0: 10] != time.asctime(time.localtime(time.time()))[0: 10]:
-        return 1
-    else:
-        return 0
-
-
-def get_chick_info(user_id: str):
-    with open('./data/user.json', 'r', encoding='utf-8') as f:
-        data = json.load(f)
-
-    return data[user_id]
-
-
-def get_user_info():
-    with open('./data/user.json', 'r', encoding='utf-8') as f:
-        data = json.load(f)
-
-    return data
-
-
-def chick_in_text(user_id: str, name: str) -> str:
     data = get_chick_info(user_id)
-    coin = data['user_coin']
-    cid = data['check_in_days']
-    favor = data['user_favor']
+    user_coin = data[4]
+    user_favor = data[5]
+    chick_in_days = data[6]
+
+    up_user_coin = coin_algorithm(user_favor, user_coin)
+    up_user_favor = favor_algorithm(chick_in_days, user_favor)
+    up_chick_in_days = chick_in_days + 1
+    up_last_chick_in_time = datetime.today().strftime("%Y-%m-%d")
+
+    sql_update = (
+        'UPDATE user SET '
+        'user_coin = ?,'
+        f'user_favor = ?,'
+        f'chick_in_days = ?,'
+        f'last_chick_in_time = ? '
+        f'WHERE user_id = ?;'
+    )
+
+    cursor.execute(sql_update, (up_user_coin, up_user_favor, up_chick_in_days, up_last_chick_in_time, user_id))
+
+    cursor.close()
+    coon.commit()
+    coon.close()
+
+
+# 验证是否在一天内重复签到
+def check_in_interval_judgment(user_id: int):
+    coon = sqlite3.connect(r'.\data\data.db')
+    cursor = coon.cursor()
+
+    sql_select = (
+        f'select * from user where user_id={user_id};'
+    )
+
+    cursor.execute(sql_select)
+
+    data = cursor.fetchall()
+    data = data[0]
+
+    cursor.close()
+    coon.commit()
+    coon.close()
+
+    if data[7] == datetime.today().strftime('%Y-%m-%d'):
+        return False
+    else:
+        return True
+
+
+def get_chick_info(user_id: int):
+    coon = sqlite3.connect(r'.\data\data.db')
+    cursor = coon.cursor()
+
+    sql_select = (
+        f'select * from user where user_id={user_id};'
+    )
+
+    cursor.execute(sql_select)
+
+    data = cursor.fetchall()
+
+    cursor.close()
+    coon.commit()
+    coon.close()
+
+    return data[0]
+
+
+def user_registration_interval_judgment(user_id):
+    coon = sqlite3.connect(r'.\data\data.db')
+    cursor = coon.cursor()
+
+    sql_select = (
+        f"select 1 from user where user_id = ? limit 1;"
+    )
+
+    cursor.execute(sql_select, (user_id,))
+    values = cursor.fetchall()
+
+    cursor.close()
+    coon.commit()
+    coon.close()
+
+    if values:
+        return False
+    else:
+        return True
+
+
+def chick_in_text(user_id: int, name: str) -> str:
+    data = get_chick_info(user_id)
+    coin = data[4]
+    favor = data[5]
+    cid = data[6]
     text = f'{name}\n签 到 成 功\nCuprum {coin}\n签到天数    {cid}     好感度    {favor}'
+    return text
+
+
+def get_chick_in_check(user_id: int) -> str:
+    data = get_chick_info(user_id)
+    name = data[2]
+    coin = data[4]
+    favor = data[5]
+    cid = data[6]
+    text = f'{name}\nCuprum {coin}\n签到天数    {cid}     好感度    {favor}'
     return text

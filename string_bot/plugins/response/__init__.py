@@ -20,7 +20,7 @@ async def response_meow(session: CommandSession):
 
 @cg.command('kusa', aliases=['草'])
 async def response_kusa(session: CommandSession):
-    if randint(1, 10) > 6:
+    if randint(1, 10) > 4:
         await session.send('草')
     else:
         return
@@ -57,6 +57,14 @@ async def response_mua(session: CommandSession):
 async def response_zaima(session: CommandSession):
     if randint(1, 10) > 2:
         await session.send('buzai,cnm')
+    else:
+        return
+
+
+@cg.command('nihao', aliases=['你好', '泥嚎'])
+async def response_nihao(session: CommandSession):
+    if randint(1, 10) > 6:
+        await session.send('泥嚎,我很阔爱,请给我钱')
     else:
         return
 

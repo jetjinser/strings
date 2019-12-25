@@ -9,15 +9,14 @@ __plugin_usage__ = r"""签到服务
 
 指令: 签到 / 注册"""
 
-
 cg = CommandGroup('chick_in', only_to_me=False)
 
 
 @cg.command('registered', aliases=['注册'])
 async def registered(session: CommandSession):
     user_id = session.ctx['sender']['user_id']
-    data = get_user_info()
-    if str(user_id) not in list(data.keys()):
+
+    if user_registration_interval_judgment(user_id):
         user_registration(session.ctx)
         await session.send('注册成功!')
     else:
@@ -28,7 +27,6 @@ async def registered(session: CommandSession):
 async def chick_in_cmd(session: CommandSession):
     try:
         uid = session.ctx['sender']['user_id']
-        uid = str(uid)
 
         if check_in_interval_judgment(uid):
 
@@ -56,5 +54,16 @@ async def chick_in_cmd(session: CommandSession):
             await session.send('[CQ:image,file=file:///data/send.png]')
         else:
             await session.send('您今天已经签到过了')
-    except KeyError:
+    except IndexError:
         await session.finish('请发送"注册"  来完成注册!')
+
+
+@cg.command('chick_in_check', aliases=['查询', '个人信息'])
+async def chick_in_check(session: CommandSession):
+    user_id = session.ctx['sender']['user_id']
+
+    try:
+        msg = get_chick_in_check(user_id)
+        await session.send(msg)
+    except IndexError:
+        await session.send('您还没有注册')
