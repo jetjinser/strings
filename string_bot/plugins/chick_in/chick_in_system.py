@@ -14,8 +14,9 @@ def user_registration(ctx):
 
     sql_insert = (
         'INSERT INTO user VALUES ('
-        f'NULL, {user_id}, \'{user_nickname}\', {user_card}, {0}, {0}, {0}, \'2019-01-01\');'
+        f'NULL, {user_id}, \'{user_nickname}\', \'{user_card}\', {0}, {0}, {0}, \'2019-01-01\');'
     )
+    print(sql_insert)
 
     cursor.execute(sql_insert)
 
