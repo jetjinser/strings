@@ -131,9 +131,11 @@ dmypy.json
 # data & test
 string_bot/test.py
 demo.py
-t.json
 temporary.py
 just_now.py
 user.json
 demo.jpg
 send.png
+
+string_bot/data/image
+string_bot/data/language_list.png

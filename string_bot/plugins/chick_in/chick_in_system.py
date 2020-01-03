@@ -5,7 +5,7 @@ import sqlite3
 
 # 用户注册函数
 def user_registration(ctx):
-    coon = sqlite3.connect(r'.\data\data.db')
+    coon = sqlite3.connect('./data/data.db')
     cursor = coon.cursor()
 
     user_id = ctx['sender']['user_id']
@@ -62,7 +62,7 @@ def coin_algorithm(favor: int, coin: int):  # favor
 
 # 签到函数
 def chick_in(user_id: int):
-    coon = sqlite3.connect(r'.\data\data.db')
+    coon = sqlite3.connect('./data/data.db')
     cursor = coon.cursor()
 
     data = get_chick_info(user_id)
@@ -93,7 +93,7 @@ def chick_in(user_id: int):
 
 # 验证是否在一天内重复签到
 def check_in_interval_judgment(user_id: int):
-    coon = sqlite3.connect(r'.\data\data.db')
+    coon = sqlite3.connect('./data/data.db')
     cursor = coon.cursor()
 
     sql_select = (
@@ -116,7 +116,7 @@ def check_in_interval_judgment(user_id: int):
 
 
 def get_chick_info(user_id: int):
-    coon = sqlite3.connect(r'.\data\data.db')
+    coon = sqlite3.connect('./data/data.db')
     cursor = coon.cursor()
 
     sql_select = (
@@ -135,7 +135,7 @@ def get_chick_info(user_id: int):
 
 
 def user_registration_interval_judgment(user_id):
-    coon = sqlite3.connect(r'.\data\data.db')
+    coon = sqlite3.connect('./data/data.db')
     cursor = coon.cursor()
 
     sql_select = (

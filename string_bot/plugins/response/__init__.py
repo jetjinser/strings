@@ -20,7 +20,7 @@ async def response_meow(session: CommandSession):
 
 @cg.command('kusa', aliases=['草'])
 async def response_kusa(session: CommandSession):
-    if randint(1, 10) > 4:
+    if randint(1, 10) > 3:
         await session.send('草')
     else:
         return

@@ -13,6 +13,13 @@ async def send_private(session: CommandSession):
     user = session.get('user', prompt='发给谁')
     msg = session.get('msg', prompt='发什么')
     bot = session.bot
+    if msg == '每一个' or '每个':
+        friend_id_list = await bot.get_friend_list()
+        print(friend_id_list)
+        # group_id_list = [gid['group_id'] for gid in group_id_list]
+        # for i in group_id_list:
+        #     await bot.send_private_msg(user_id=i, message=msg)
+        # await session.finish('全部群发成功')
     try:
         await bot.send_private_msg(user_id=user, message=msg)
         await session.send('成功')
@@ -25,6 +32,12 @@ async def send_group(session: CommandSession):
     group_id = session.get('group_id', prompt='发给哪个群')
     msg = session.get('msg', prompt='发什么')
     bot = session.bot
+    if msg == '每一个' or '每个':
+        group_id_list = await bot.get_group_list()
+        group_id_list = [gid['group_id'] for gid in group_id_list]
+        for i in group_id_list:
+            await bot.send_group_msg(group_id=i, message=msg)
+        await session.finish('全部群发成功')
     try:
         await bot.send_group_msg(group_id=group_id, message=msg)
         await session.send('成功')
