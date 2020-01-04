@@ -22,11 +22,7 @@ from .process import *
 
 @on_notice('group_increase')
 async def _(session: NoticeSession):
-    ctx = session.ctx.copy()
-    if ctx['user_id'] == ctx['self_id']:
-        await session.send('大家好')
-    else:
-        await session.send('欢迎')
+    await session.send('欢迎')
 
 
 @on_notice('group_decrease')
@@ -69,6 +65,7 @@ async def _(session: RequestSession):
     ctx = session.ctx.copy()
     if ctx['sub_type'] == 'invite':
         await session.approve()
+        await session.send('大家好')
         group_id = ctx['group_id']
         comment = ctx['comment']
         time = timestamp2string(ctx['time'])
