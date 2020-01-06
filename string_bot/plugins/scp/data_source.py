@@ -1,5 +1,6 @@
 import requests
 import json
+from pyquery import PyQuery as pq
 
 
 async def get_scp_daily(index):

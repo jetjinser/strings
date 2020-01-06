@@ -2,14 +2,14 @@ import requests
 
 
 def shortlink(long_url: str) -> str:
-    host = 'http://sina-t.cn'
-    path = '/api'
-    params = {'link': long_url}
+    host = 'https://www.98api.cn'
+    path = '/api/sinaDwz.php'
+    params = {'url': long_url}
     url = host + path
 
     r = requests.get(url, params=params)
-    resp = r.text
-    return resp
+    resp = r.json()
+    return resp['short_url']
 
 
 async def get_baidu_url(content: str) -> str:

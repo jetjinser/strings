@@ -1,8 +1,5 @@
 import requests
 import random
-from bs4 import BeautifulSoup
-from urllib.request import urlopen
-from urllib import parse
 import time
 
 
@@ -30,16 +27,16 @@ async def get_five_sayings():
 
 
 async def get_garbage_classification(arg):
-    url = 'https://lajifenleiapp.com/sk/{}'.format(parse.quote(arg))
-    html = urlopen(url)
-    soup = BeautifulSoup(html, 'html.parser')
-    one_soup = soup.find_all('span', {'style': 'color:#643f30'})
-    two_soup = soup.find_all('span', {'style': 'color:#00447b'})
-    three_soup = soup.find_all('span', {'style': '#2e2a2b'})
-    four_soup = soup.find_all('span', {'style': 'color:#e23322'})
-    if one_soup + two_soup + three_soup + four_soup:
-        for i in one_soup + two_soup + three_soup + four_soup:
-            return i.get_text()
+    host = 'https://www.98api.cn'
+    path = '/api/rubbish.php'
+    params = {'kw': arg}
+    url = host + path
+
+    r = requests.get(url, params=params)
+    resp = r.json()
+
+    if resp:
+        return '\n'.join([i['key'] + ' 是 ' + i['type'] for i in resp])
     else:
         return 'buzhidao'
 
@@ -153,11 +150,12 @@ async def get_calendar(date: str = time.strftime('%Y%m%d', time.localtime(time.t
     r = requests.get(url)
     response_dict = r.json()
     dialect = response_dict['data']
-    formatted = dialect['date'] + '  ' + '农历' + dialect['lunarCalendar'] + '  ' + dialect['solarTerms'] + '  ' + \
-                dialect['typeDes'] + '\n' + '今年是' + dialect['yearTips'] + dialect[
-                    'chineseZodiac'] + '年' + '  ' + '今日星座是' + dialect['constellation'] + '\n' + '今天是本年度第' + str(
-        dialect['weekOfYear']) + '周 第' + str(dialect['dayOfYear']) + '天\n' + '宜 ' + dialect['suit'] + \
-                '\n忌 ' + dialect['avoid']
+    formatted = (
+            dialect['date'] + '  ' + '农历' + dialect['lunarCalendar'] + '  ' + dialect['solarTerms'] + '  ' +
+            dialect['typeDes'] + '\n' + '今年是' + dialect['yearTips'] + dialect['chineseZodiac'] + '年' + '  ' +
+            '今日星座是' + dialect['constellation'] + '\n' + '今天是本年度第' + str(dialect['weekOfYear']) +
+            '周 第' + str(dialect['dayOfYear']) + '天\n' + '宜 ' + dialect['suit'] + '\n忌 ' + dialect['avoid']
+    )
     return formatted
 
 

@@ -44,14 +44,16 @@ async def chick_in_cmd(session: CommandSession):
             image = ImageProcessing(image, text, 256, 'send')
             image.save()
 
-            # 不抛异常, 但是没有酷Q pro就无法发图
-            # 无法直接捕获异常
-            # air时用:
-            # await session.send(text)
-            # pro时用:
-            # 把这个文件复制到docker挂载的coolq的文件夹里才能识别到
-            copyfile('data/send.png', '/home/ubuntu/coolq-pro/data/send.png')
-            await session.send('[CQ:image,file=file:///data/send.png]')
+            bot = session.bot
+            boo = await bot.can_send_image()
+            boo = boo['yes']
+
+            if boo:
+                await session.send(text)
+            else:
+                # 把这个文件复制到docker挂载的coolq的文件夹里才能识别到
+                copyfile('data/send.png', '/home/ubuntu/coolq-pro/data/send.png')
+                await session.send('[CQ:image,file=file:///data/send.png]')
         else:
             await session.send('您今天已经签到过了')
     except IndexError:

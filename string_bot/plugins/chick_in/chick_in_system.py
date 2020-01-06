@@ -14,10 +14,14 @@ def user_registration(ctx):
 
     sql_insert = (
         'INSERT INTO user VALUES ('
+<<<<<<< HEAD
         f'NULL, {user_id}, \'{user_nickname}\', \'{user_card}\', {0}, {0}, {0}, \'2019-01-01\');'
+=======
+        'NULL, ?, ?, ?, ?, ?, ?, ?);'
+>>>>>>> 9c5c512a17355df7b744aa421e833ac3f6b1d857
     )
 
-    cursor.execute(sql_insert)
+    cursor.execute(sql_insert, (user_id, user_nickname, user_card, 0, 0, 0, '2019-01-01'))
 
     cursor.close()
     coon.commit()
