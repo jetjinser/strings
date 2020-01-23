@@ -1,101 +1,89 @@
-from nonebot import on_command, CommandSession
+from nonebot import CommandSession, on_command, get_bot
 from nonebot.permission import *
-from aiocqhttp import ActionFailed
+
+__plugin_name__ = '遥控'
+__plugin_usage__ = r'''暂不开放'''
 
 
-__plugin_name__ = 'send'
-__plugin_usage__ = r"""不开放功能
-"""
+class ops:
+    @staticmethod
+    async def send_to_x(session: CommandSession, msg_type: str):
+        bot = get_bot()
+        param = session.get('param')
+        param_split = param.split(' ', 1)
+        try:
+            target_id, to_send = param_split[0], param_split[1]
+        except IndexError:
+            target_id, to_send = None, param_split[0]
+        count = 0
 
+        try:
+            if msg_type == 'group':
+                await bot.send_group_msg(group_id=target_id, message=to_send)
+            elif msg_type == 'private':
+                await bot.send_private_msg(user_id=target_id, message=to_send)
+            elif msg_type == 'all_group':
+                group_id_list = await bot.get_group_list()
+                group_id_list = [gid['group_id'] for gid in group_id_list]
+                for group_id in group_id_list:
+                    count += 1
+                    await bot.send_group_msg(group_id=group_id, message=to_send)
+                await session.send(f'正在向{count}个群发送消息')
+            elif msg_type == 'all_friends':
+                session.finish('该功能暂时不可用')
+                friend_id_list = await bot.get_friend_list()
+                print(friend_id_list)
+                friend_id_list = [fid['user_id'] for fid in friend_id_list]
+                for friend_id in friend_id_list:
+                    count += 1
+                    await bot.send_private_msg(user_id=friend_id, message=to_send)
+                await session.send(f'正在向{count}名好友发送消息')
+            await session.send('success!')
+        except CQHttpError as exc:
+            await session.send(str(exc))
 
-@on_command('send_private', aliases=['send_private', 'say_private', '私发'], permission=SUPERUSER)
-async def send_private(session: CommandSession):
-    user = session.get('user', prompt='发给谁')
-    msg = session.get('msg', prompt='发什么')
-    bot = session.bot
-    if msg == '每一个' or '每个':
-        friend_id_list = await bot.get_friend_list()
-        print(friend_id_list)
-        # group_id_list = [gid['group_id'] for gid in group_id_list]
-        # for i in group_id_list:
-        #     await bot.send_private_msg(user_id=i, message=msg)
-        # await session.finish('全部群发成功')
-    try:
-        await bot.send_private_msg(user_id=user, message=msg)
-        await session.send('成功')
-    except ActionFailed:
-        await session.send('QQ号有误')
-
-
-@on_command('send_group', aliases=['send_group', 'say_group', '群发'], permission=SUPERUSER)
-async def send_group(session: CommandSession):
-    group_id = session.get('group_id', prompt='发给哪个群')
-    msg = session.get('msg', prompt='发什么')
-    bot = session.bot
-    if msg == '每一个' or '每个':
-        group_id_list = await bot.get_group_list()
-        group_id_list = [gid['group_id'] for gid in group_id_list]
-        for i in group_id_list:
-            await bot.send_group_msg(group_id=i, message=msg)
-        await session.finish('全部群发成功')
-    try:
-        await bot.send_group_msg(group_id=group_id, message=msg)
-        await session.send('成功')
-    except ActionFailed:
-        await session.send('群号有误')
-
-
-# 私人消息的参数处理器
-@send_private.args_parser
-async def _(session: CommandSession):
-    stripped_arg = session.current_arg_text.rstrip()
-
-    if session.is_first_run:
+    @staticmethod
+    async def arg_parser_x(session: CommandSession):
+        stripped_arg = session.current_arg.strip()
         if stripped_arg:
-            try:
-                session.state['user'] = int(stripped_arg.split()[0])
-            except TypeError:
-                session.pause('错误, 再输入一次QQ号')
-            try:
-                # 怪
-                start = len(stripped_arg.split()[0]) + 1
-                session.state['msg'] = stripped_arg[start:]
-            except IndexError:
-                session.state['msg'] = None
-        return
-
-    if not stripped_arg:
-        if session.state.get('msg'):
-            session.pause('错误, 再输入一次消息')
-
-        session.pause('错误, 再输入一次QQ号')
-
-    session.state[session.current_key] = stripped_arg
+            session.state['param'] = stripped_arg
+        else:
+            await session.send('用法：\n发送到群/好友 [群号/QQ] [内容]\n或\n发送到所有群/好友 [内容]')
+            session.finish()
 
 
-# 群聊天消息的参数处理器
-@send_group.args_parser
-async def _(session: CommandSession):
-    stripped_arg = session.current_arg_text.rstrip()
+@on_command('发送到群', permission=SUPERUSER)
+async def send_to_group(session: CommandSession):
+    await ops.send_to_x(session, 'group')
 
-    if session.is_first_run:
-        if stripped_arg:
-            try:
-                session.state['group_id'] = int(stripped_arg.split()[0])
-            except TypeError:
-                session.pause('错误, 再输入一次群号')
-            try:
-                # 怪
-                start = len(stripped_arg.split()[0]) + 1
-                session.state['msg'] = stripped_arg[start:]
-            except IndexError:
-                session.state['msg'] = None
-        return
 
-    if not stripped_arg:
-        if session.state.get('msg'):
-            session.pause('错误, 再输入一次消息')
+@on_command('发送到好友', permission=SUPERUSER)
+async def send_to_private(session: CommandSession):
+    await ops.send_to_x(session, 'private')
 
-        session.pause('错误, 再输入一次群号')
 
-    session.state[session.current_key] = stripped_arg
+@on_command('发送到所有群', permission=SUPERUSER)
+async def send_to_all_groups(session: CommandSession):
+    await ops.send_to_x(session, 'all_group')
+
+
+@on_command('发送到所有好友', permission=SUPERUSER)
+async def send_to_all_friends(session: CommandSession):
+    await ops.send_to_x(session, 'all_friends')
+
+
+@send_to_group.args_parser
+@send_to_private.args_parser
+async def group_arg_parse(session: CommandSession):
+    await ops.arg_parser_x(session)
+
+
+@send_to_all_groups.args_parser
+async def all_group_arg_parse(session: CommandSession):
+    await ops.arg_parser_x(session)
+
+
+@send_to_all_friends.args_parser
+async def all_friends_arg_parse(session: CommandSession):
+    await ops.arg_parser_x(session)
+

@@ -32,7 +32,7 @@ async def chick_in_cmd(session: CommandSession):
 
             chick_in(uid)
 
-            image = get_image(uid)
+            image = await get_image(uid)
 
             card = session.ctx.get('sender').get('card')
             if card:
@@ -52,7 +52,7 @@ async def chick_in_cmd(session: CommandSession):
                 await session.send(text)
             else:
                 # 把这个文件复制到docker挂载的coolq的文件夹里才能识别到
-                copyfile('data/send.png', '/home/ubuntu/coolq-pro/data/send.png')
+                copyfile('cache/send.png', '/home/ubuntu/coolq-pro/data/send.png')
                 await session.send('[CQ:image,file=file:///data/send.png]')
         else:
             await session.send('您今天已经签到过了')
