@@ -136,6 +136,7 @@ just_now.py
 user.json
 demo.jpg
 #send.png
+string_bot/data/data.db
 
 string_bot/data/image
 string_bot/data/language_list.png
