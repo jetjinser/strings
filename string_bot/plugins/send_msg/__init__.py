@@ -7,14 +7,14 @@ __plugin_usage__ = r'''暂不开放'''
 
 class ops:
     @staticmethod
-    async def send_to_x(session: CommandSession, msg_type: str):
+    async def send_to_x(session: CommandSession, msg_type: str, boo: bool = False):
         bot = get_bot()
         param = session.get('param')
         param_split = param.split(' ', 1)
-        try:
-            target_id, to_send = param_split[0], param_split[1]
-        except IndexError:
-            target_id, to_send = None, param_split[0]
+        if not boo:
+            target_id, to_send = param_split[0], ''.join(param_split[1:])
+        else:
+            target_id, to_send = None, ''.join(param_split[0:])
         count = 0
 
         try:
@@ -64,12 +64,12 @@ async def send_to_private(session: CommandSession):
 
 @on_command('发送到所有群', permission=SUPERUSER)
 async def send_to_all_groups(session: CommandSession):
-    await ops.send_to_x(session, 'all_group')
+    await ops.send_to_x(session, 'all_group', True)
 
 
 @on_command('发送到所有好友', permission=SUPERUSER)
 async def send_to_all_friends(session: CommandSession):
-    await ops.send_to_x(session, 'all_friends')
+    await ops.send_to_x(session, 'all_friends', True)
 
 
 @send_to_group.args_parser
@@ -86,4 +86,3 @@ async def all_group_arg_parse(session: CommandSession):
 @send_to_all_friends.args_parser
 async def all_friends_arg_parse(session: CommandSession):
     await ops.arg_parser_x(session)
-
