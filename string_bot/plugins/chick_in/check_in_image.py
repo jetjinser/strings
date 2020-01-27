@@ -22,12 +22,15 @@ class ImageProcessing:
         self._small_size = small_size
         self._name = name
 
+        if self._image.size != (640, 640):
+            self._image.resize((640, 640))
+
     def gaussian_blur(self):
         """
         高斯模糊处理
         :return: 模糊后的图片
         """
-        img = self._image.filter(ImageFilter.GaussianBlur(radius=6))
+        img = self._image.filter(ImageFilter.GaussianBlur(radius=7))
         return img
 
     def circle(self):
@@ -54,25 +57,6 @@ class ImageProcessing:
         img.putalpha(self.circle())
 
         return img
-
-    def coloring(self, where):
-        """
-        取反色
-        :param where: 所取的位置
-        :return: 反色(RGB)
-        """
-        # 取rgb值
-        pix = self._image.getpixel(where)
-        r, g, b, _ = pix
-
-        # 取反色
-        pix = list(pix)
-        pix[0] = 255 - r
-        pix[1] = 255 - g
-        pix[2] = 255 - b
-        pix[3] = 255
-
-        return tuple(pix)
 
     def process(self):
         """
@@ -114,13 +98,12 @@ class ImageProcessing:
         # 指定文字, 文字的字体和位置
         txt = self._txt.split('\n')
         font = ImageFont.truetype('./data/REEJI-HonghuangLiGB-SemiBold-2.ttf', 24)
+        pix = (255, 255, 255)
         count = 0
         for i in txt:
             text_size = font.getsize(i)
             where = (
                 (self._image.size[0] - text_size[0]) / 2, (self._image.size[1] - text_size[1]) / 2 + 125 + 30 * count)
-
-            pix = (255, 255, 255)
 
             # 写入文字
             draw = ImageDraw.Draw(target)
@@ -156,4 +139,4 @@ class ImageProcessing:
         """
         保存图片
         """
-        self.process().save('./data/' + self._name + '.png')
+        self.process().save('./cache/' + self._name + '.png')

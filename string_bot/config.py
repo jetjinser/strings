@@ -15,3 +15,6 @@ TOO_MANY_VALIDATION_FAILURES_EXPRESSION = (
     'wdnmd',
     '?'
 )
+
+
+SAUCENAO_API_KEY = ''

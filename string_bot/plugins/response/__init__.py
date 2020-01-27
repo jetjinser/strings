@@ -4,7 +4,6 @@ from random import randint
 __plugin_name__ = '回应'
 __plugin_usage__ = r"""应激反应"""
 
-
 cg = CommandGroup('response', only_to_me=False)
 
 
@@ -20,7 +19,7 @@ async def response_meow(session: CommandSession):
 
 @cg.command('kusa', aliases=['草'])
 async def response_kusa(session: CommandSession):
-    if randint(1, 10) > 3:
+    if randint(1, 10) > 8:
         await session.send('草')
     else:
         return
@@ -71,6 +70,7 @@ async def response_nihao(session: CommandSession):
 
 @cg.command('help', aliases=['help', '怎么用', '怎么玩'])
 async def response_help(session: CommandSession):
-    await session.send('@我说 帮助 查看功能')
-
-
+    if randint(1, 10) > 5:
+        await session.send('@我说 帮助 查看功能')
+    else:
+        return

@@ -145,7 +145,8 @@ async def get_steam_sale() -> str:
     return msg
 
 
-async def get_calendar(date: str = time.strftime('%Y%m%d', time.localtime(time.time()))) -> str:
+async def get_calendar() -> str:
+    date = time.strftime('%Y%m%d', time.localtime(time.time()))
     url = f'https://www.mxnzp.com/api/holiday/single/{date}'
     r = requests.get(url)
     response_dict = r.json()

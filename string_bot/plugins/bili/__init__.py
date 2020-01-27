@@ -26,7 +26,7 @@ async def new_animation(session: CommandSession):
 
 
 @new_animation.args_parser
-async def new_animation(session: CommandSession):
+async def _(session: CommandSession):
     stripped_arg = session.current_arg_text.strip()
 
     if session.is_first_run:
