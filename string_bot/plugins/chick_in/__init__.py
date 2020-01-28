@@ -48,7 +48,7 @@ async def chick_in_cmd(session: CommandSession):
             boo = await bot.can_send_image()
             boo = boo['yes']
 
-            if boo:
+            if not boo:
                 await session.send(text)
             else:
                 # 把这个文件复制到docker挂载的coolq的文件夹里才能识别到
