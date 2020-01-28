@@ -8,6 +8,7 @@ rumor_cmd = ['最新辟谣', '辟谣动态', '新肺炎辟谣']
 recommend_cmd = ['最新防护知识', '防护知识']
 temp1_cmd = ['诊疗信息']
 temp2_cmd = ['肺炎wiki', '诊疗百科', '医疗百科', 'wiki']
+donate_cmd = ['捐赠信息', '捐赠']
 
 
 def f_cmd(*args: list):
@@ -22,7 +23,7 @@ __plugin_name__ = '新肺炎动态'
 __plugin_usage__ = fr"""获取新肺炎动态
 来自 https://juejin.im/post/5e2c6a6e51882526b757cf2e
 
-指令: {f_cmd(time_line_cmd, statistics_cmd, area_stat_cmd, rumor_cmd, temp1_cmd, temp2_cmd)}"""
+指令: {f_cmd(time_line_cmd, statistics_cmd, area_stat_cmd, rumor_cmd, temp1_cmd, temp2_cmd, donate_cmd)}"""
 
 cg = CommandGroup('fast', only_to_me=False)
 
@@ -55,7 +56,7 @@ async def fast_area_stat(session: CommandSession):
             city_msg = await get_area_stat_2(cities_name, cities_dict_list, city)
             await session.send(city_msg)
         else:
-            return
+            await session.send("城市名不存在，会话结束")
     except TypeError:
         session.finish('无数据, 请确认输入是否正确')
 
@@ -102,3 +103,9 @@ async def fast_temp2(session: CommandSession):
     msg = await get_wiki()
     f_msg = '\n'.join(msg)
     await session.send(f_msg)
+
+@cg.command('donate', aliases=donate_cmd)
+async def fast_donate(session: CommandSession):
+    msg = '''湖北抗疫物资+捐赠信息汇总（持续更新）
+    https://shimo.im/docs/wDtQpGCgghWkgVxD/read'''
+    await session.send(msg)
