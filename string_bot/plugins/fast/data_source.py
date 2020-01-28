@@ -85,7 +85,7 @@ async def get_area_stat(province='福建'):
 
 
 async def get_area_stat_2(cities_name, cities_dict_list, city):
-    index = len(cities_name) - 1
+    index = cities_name.index(city)
     cities_confirmed_count = cities_dict_list[index].get('confirmedCount')
     cities_suspected_count = cities_dict_list[index].get('suspectedCount')
     cities_cured_count = cities_dict_list[index].get('curedCount')
