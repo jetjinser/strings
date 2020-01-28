@@ -7,7 +7,6 @@ __plugin_usage__ = r"""有关搜索
 
 指令: 百度 / bing / 不会百度么"""
 
-
 cg = CommandGroup('search', only_to_me=False)
 
 
@@ -32,40 +31,10 @@ async def search_buhuibaidume(session: CommandSession):
     await session.send(str(msg))
 
 
-# 百度搜索的参数处理器
-@search_baidu.args_parser
-async def _(session: CommandSession):
-    stripped_arg = parse.quote(session.current_arg_text.strip())
-
-    if session.is_first_run:
-        if stripped_arg:
-            session.state['content'] = parse.quote(session.current_arg_text)
-        return
-
-    if not stripped_arg:
-        session.pause('要查询的内容不能为空')
-
-    session.state[session.current_key] = stripped_arg
-
-
-# 必应搜索的参数处理器
+# 搜索的参数处理器
 @search_bing.args_parser
-async def _(session: CommandSession):
-    stripped_arg = parse.quote(session.current_arg_text.strip())
-
-    if session.is_first_run:
-        if stripped_arg:
-            session.state['content'] = parse.quote(session.current_arg_text)
-        return
-
-    if not stripped_arg:
-        session.pause('要查询的内容不能为空')
-
-    session.state[session.current_key] = stripped_arg
-
-
-# 不会百度么的参数处理器
 @search_buhuibaidume.args_parser
+@search_baidu.args_parser
 async def _(session: CommandSession):
     stripped_arg = parse.quote(session.current_arg_text.strip())
 

@@ -13,10 +13,12 @@ cg = CommandGroup('button', only_to_me=False)
 @cg.command('aqua', aliases=['aqua_button', '夸按钮', '夸叫'])
 async def button_aqua(session: CommandSession):
     voice = await get_aqua_voice_url()
+    print(voice)
     await session.send(f'[CQ:record,file={voice}]')
 
 
 @cg.command('mea', aliases=['mea_button', '咩按钮', '咩叫'])
 async def button_mea(session: CommandSession):
     voice = await get_mea_voice_url()
+    print(voice)
     await session.send(f'[CQ:record,file={voice}]')

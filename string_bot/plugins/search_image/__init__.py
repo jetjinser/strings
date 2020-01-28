@@ -1,9 +1,9 @@
 from nonebot import CommandGroup, CommandSession
 from .data_source import *
 
-pixivic_cmd = ['psearch', 'pixiv_search', 'p识图1']
+pixivic_cmd = ['psearch', 'pixiv_search', 'p识图1', 'p搜图1']
 trace_cmd = ['asearch', 'trace_search', '动画识图']
-saucenao_cmd = ['ssearch', 'saucenao_search', 'p识图', 'p识图2']
+saucenao_cmd = ['ssearch', 'saucenao_search', 'p识图', 'p搜图', 'p识图2', 'p搜图2']
 
 __plugin_name__ = '搜图'
 __plugin_usage__ = fr"""搜二次元图

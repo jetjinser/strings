@@ -1,5 +1,4 @@
 import requests
-from string_bot.config import SAUCENAO_API_KEY
 
 
 async def to_isearch_pixivic(original_image_url, boo: bool) -> str:
