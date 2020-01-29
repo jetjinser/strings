@@ -33,23 +33,23 @@ async def _():
 
 
 # ================================================================
-@nonebot.scheduler.scheduled_job('cron', hour='*')
-async def _():
-    bot = nonebot.get_bot()
-    group_list = await bot.get_group_list()
-    try:
-        for group in group_list:
-            group_id = group['group_id']
+# @nonebot.scheduler.scheduled_job('cron', hour='*')
+# async def _():
+#     bot = nonebot.get_bot()
+#     group_list = await bot.get_group_list()
+#     try:
+#         for group in group_list:
+#             group_id = group['group_id']
 
-            msg = await get_statistics(False)
+#             msg = await get_statistics(False)
 
-            await bot.send_group_msg(group_id=group_id,
-                                     message=msg)
-    except CQHttpError:
-        pass
+#             await bot.send_group_msg(group_id=group_id,
+#                                      message=msg)
+#     except CQHttpError:
+#         pass
 
 
-@nonebot.scheduler.scheduled_job('cron', hour='*', minute=20)
+@nonebot.scheduler.scheduled_job('cron', hour='9', minute=20)
 async def _():
     bot = nonebot.get_bot()
     group_list = await bot.get_group_list()
@@ -65,17 +65,17 @@ async def _():
         pass
 
 
-@nonebot.scheduler.scheduled_job('cron', hour='*', minute=40)
-async def _():
-    bot = nonebot.get_bot()
-    group_list = await bot.get_group_list()
-    try:
-        for group in group_list:
-            group_id = group['group_id']
+# @nonebot.scheduler.scheduled_job('cron', hour='*', minute=40)
+# async def _():
+#     bot = nonebot.get_bot()
+#     group_list = await bot.get_group_list()
+#     try:
+#         for group in group_list:
+#             group_id = group['group_id']
 
-            msg = await get_recommend_list()
+#             msg = await get_recommend_list()
 
-            await bot.send_group_msg(group_id=group_id,
-                                     message=msg)
-    except CQHttpError:
-        pass
+#             await bot.send_group_msg(group_id=group_id,
+#                                      message=msg)
+#     except CQHttpError:
+#         pass
