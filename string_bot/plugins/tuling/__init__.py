@@ -56,37 +56,41 @@ async def call_tuling_api(session: CommandSession, text: str) -> Optional[str]:
     url = 'http://openapi.tuling123.com/openapi/api/v2'
 
     # 构造请求数据
-    payload = {
-        'reqType': 0,
-        'perception': {
-            'inputText': {
-                'text': text
+    for API_KEY in session.bot.config.TULING_API_KEY:
+        payload = {
+            'reqType': 0,
+            'perception': {
+                'inputText': {
+                    'text': text
+                }
+            },
+            'userInfo': {
+                'apiKey': API_KEY,
+                'userId': context_id(session.ctx, use_hash=True)
             }
-        },
-        'userInfo': {
-            'apiKey': session.bot.config.TULING_API_KEY,
-            'userId': context_id(session.ctx, use_hash=True)
         }
-    }
 
-    group_unique_id = context_id(session.ctx, mode='group', use_hash=True)
-    if group_unique_id:
-        payload['userInfo']['groupId'] = group_unique_id
+        group_unique_id = context_id(session.ctx, mode='group', use_hash=True)
+        if group_unique_id:
+            payload['userInfo']['groupId'] = group_unique_id
 
-    try:
-        # 使用 aiohttp 库发送最终的请求
-        async with aiohttp.ClientSession() as sess:
-            async with sess.post(url, json=payload) as response:
-                if response.status != 200:
-                    # 如果 HTTP 响应状态码不是 200，说明调用失败
-                    return None
+        try:
+            # 使用 aiohttp 库发送最终的请求
+            async with aiohttp.ClientSession() as sess:
+                async with sess.post(url, json=payload) as response:
+                    if response.status != 200:
+                        # 如果 HTTP 响应状态码不是 200，说明调用失败
+                        return None
 
-                resp_payload = json.loads(await response.text())
-                if resp_payload['results']:
-                    for result in resp_payload['results']:
-                        if result['resultType'] == 'text':
-                            # 返回文本类型的回复
-                            return result['values']['text']
-    except (aiohttp.ClientError, json.JSONDecodeError, KeyError):
-        # 抛出上面任何异常，说明调用失败
-        return None
+                    resp_payload = json.loads(await response.text())
+                    if resp_payload['results']:
+                        for result in resp_payload['results']:
+                            if result['resultType'] == 'text':
+                                # 返回文本类型的回复
+                                resp = result['values']['text']
+                                if resp == '请求次数超限制!':
+                                    continue
+                                return resp
+        except (aiohttp.ClientError, json.JSONDecodeError, KeyError):
+            # 抛出上面任何异常，说明调用失败
+            return None

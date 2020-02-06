@@ -65,6 +65,5 @@ async def code_run(code, language):
         msg = resp['stderr']
     else:
         msg = '也许是网络错误或别的什么'
-        print(resp)
 
     return msg

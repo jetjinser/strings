@@ -78,8 +78,7 @@ async def info_daily_zhihu(session: CommandSession):
 
 @cg.command('gank', aliases=['gank', '干货', '整活'])
 async def info_gank(session: CommandSession):
-    msg = await get_gank()
-    await session.send(msg)
+    gank_type = session.get('gank_type', prompt='')
 
 
 @cg.command('steam', aliases=['steam sale', 'steam促销', 'steam优惠'])
@@ -177,5 +176,31 @@ async def _(session: CommandSession):
 
     if not stripped_arg:
         session.pause('查啥啊')
+
+    session.state[session.current_key] = stripped_arg
+
+
+@info_gank.args_parser
+async def _(session: CommandSession):
+    stripped_arg = session.current_arg_text.strip()
+    type_list = ['福利', 'Android', 'iOS', '休息视频', '拓展资源', '前端']
+
+    if session.is_first_run:
+        if stripped_arg:
+            session.state['gank_type'] = stripped_arg.split()[0]
+            if session.state.get('gank_type') not in type_list + ['1', '2', '3', '4', '5', '6']:
+                session.finish(f'干货支持的类型有: {" / ".join(type_list)}, 或与其对应的数字: 如 2 对应 Android')
+            try:
+                type_num = int(session.state.get('gank_type'))
+                msg = await get_gank(type_list[type_num - 1])
+                session.finish(msg)
+            except (ValueError, IndexError):
+                msg = await get_gank(session.state.get('gank_type'))
+                session.finish(msg)
+        msg = await get_gank()
+        session.finish(msg)
+
+    if not stripped_arg:
+        session.finish()
 
     session.state[session.current_key] = stripped_arg

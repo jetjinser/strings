@@ -32,7 +32,6 @@ class ops:
             elif msg_type == 'all_friends':
                 session.finish('该功能暂时不可用')
                 friend_id_list = await bot.get_friend_list()
-                print(friend_id_list)
                 friend_id_list = [fid['user_id'] for fid in friend_id_list]
                 for friend_id in friend_id_list:
                     count += 1

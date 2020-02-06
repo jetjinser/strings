@@ -17,13 +17,15 @@ class ImageProcessing:
         :param small_size: 小图标的尺寸(宽高)
         :param name: 处理后的图片名
         """
-        self._image = Image.open(im).convert('RGBA')
+        _image = Image.open(im).convert('RGBA')
         self._txt = txt
         self._small_size = small_size
         self._name = name
 
-        if self._image.size != (640, 640):
-            self._image.resize((640, 640))
+        if _image.size != (640, 640):
+            _image.resize((640, 640))
+
+        self._image = _image
 
     def gaussian_blur(self):
         """
@@ -66,24 +68,27 @@ class ImageProcessing:
         嵌入图标框架
         :return: 处理后的图片
         """
-        w, _ = self._image.size
+        w = 640
         size = self._small_size
 
         # 创建白色画布
-        target = Image.new('RGBA', self._image.size, (0, 0, 0, 0))
+        target = Image.new('RGBA', (640, 640), (0, 0, 0, 0))
         # 贴上高斯模糊后的图片
         target.paste(self.gaussian_blur())
+        target.show()
 
         # 创建小图标的框架
         framework = Image.open('./data/framework.png').convert('L')
         framework = framework.resize((size + 30, size + 30))
         target_l = Image.new('RGBA', (size + 30, size + 30), (0, 0, 0, 0))
         target_l.putalpha(framework)
+        target_l.show()
 
         # 贴上小图标的框架
         target.paste(target_l,
                      (w // 2 - size // 2 - 15, w // 2 - size // 2 - 50 - 15),
                      target_l)
+        target.show()
 
         # 在原图中间 y-50 的位置贴上小图标
         target.paste(self.alpha_circle(),

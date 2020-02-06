@@ -112,8 +112,8 @@ async def get_daily_zhihu() -> str:
     return data
 
 
-async def get_gank() -> str:
-    resp = requests.get('http://gank.io/api/random/data/all/1')
+async def get_gank(gank_type='all') -> str:
+    resp = requests.get(f'http://gank.io/api/random/data/{gank_type}/1')
 
     resp = resp.json()
     resp = resp['results'][0]

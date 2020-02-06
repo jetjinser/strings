@@ -80,6 +80,8 @@ async def to_isearch_trace(original_image_url, boo: bool) -> str:
 async def to_isearch_saucenao(original_image_url, boo: bool):
     url = 'https://saucenao.com/search.php'
 
+    SAUCENAO_API_KEY = 'c7d48a9ddf52b984616b9ce40feec69f7b387854'
+
     params = {'output_type': 2, 'api_key': SAUCENAO_API_KEY, 'testmode': 1, 'db': 999,
               'numres': 5, 'url': original_image_url}
 
