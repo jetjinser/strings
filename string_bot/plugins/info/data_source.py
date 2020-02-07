@@ -145,8 +145,9 @@ async def get_steam_sale() -> str:
     return msg
 
 
-async def get_calendar() -> str:
-    date = time.strftime('%Y%m%d', time.localtime(time.time()))
+async def get_calendar(date=None) -> str:
+    if not date:
+        date = time.strftime('%Y%m%d', time.localtime(time.time()))
     url = f'https://www.mxnzp.com/api/holiday/single/{date}'
     r = requests.get(url)
     response_dict = r.json()
@@ -180,27 +181,28 @@ async def get_isbn_book(isbn):
 
     return msg
 
+
 # 下次一定
-# async def get_steam_sale_list() -> str:
-#     header = {
-#         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-#                       'Chrome/79.0.3945.79 Safari/537.36'}
-#
-#     resp = requests.get('http://www.vgtime.com/steam/steamapi.php?saleType=PROMOTIONAL+PRICE', headers=header)
-#
-#     resp = resp.json()
-#
-#     # count = resp['count']
-#     data = resp['data']
-#
-#     msg = '\n'
-#     detail = random.choice(data, seq=3)
-#     formatted = (
-#           detail['name'] + '   ' + detail['saleRate'] + '\n原价: ￥' + detail['oldPrice'] + '   现价: ￥' +
-#           detail['nowPrice'] + '\n平台: ' + detail['platform'] + '\n' + detail['rateInfo'].replace('<br>', '  ') +
-#           f'https://store.steampowered.com/app/{detail["aid"]}'
-#     )
-#     msg.join(formatted)
-#
-#     print(msg)
-#     return str(msg)
+async def get_steam_sale_list() -> str:
+    header = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/79.0.3945.79 Safari/537.36'}
+
+    resp = requests.get('http://www.vgtime.com/steam/steamapi.php?saleType=PROMOTIONAL+PRICE', headers=header)
+
+    resp = resp.json()
+
+    # count = resp['count']
+    data = resp['data']
+
+    msg = '\n'
+    details = random.sample(data, 3)
+    formatted = (
+        [detail['name'] + '   ' + detail['saleRate'] + '\n原价: ￥' + detail['oldPrice'] + '   现价: ￥' +
+         detail['nowPrice'] + '\n平台: ' + detail['platform'] + '\n' + detail['rateInfo'].replace('<br>', '  ') +
+         f'https://store.steampowered.com/app/{detail["aid"]}' for detail in details]
+    )
+
+    msg = msg.join(formatted)
+
+    return str(msg)

@@ -81,7 +81,7 @@ async def info_gank(session: CommandSession):
     gank_type = session.get('gank_type', prompt='')
 
 
-@cg.command('steam', aliases=['steam sale', 'steam促销', 'steam优惠'])
+@cg.command('steam', aliases=['steam_sale', 'steam促销', 'steam优惠'])
 async def info_steam(session: CommandSession):
     msg = await get_steam_sale()
     await session.send(msg)
@@ -95,10 +95,10 @@ async def info_isbn(session: CommandSession):
 
 
 # 下次一定
-# @cg.command('steam_list', aliases=['steam sale list', 'steam促销列表', 'steam优惠列表'])
-# async def info_steam(session: CommandSession):
-#     msg = await get_steam_sale_list()
-#     await session.send(msg)
+@cg.command('steam_list', aliases=['steam_sale_list', 'steam促销列表', 'steam优惠列表'])
+async def info_steam(session: CommandSession):
+    msg = await get_steam_sale_list()
+    await session.send(msg)
 
 
 # 垃圾分类的参数处理器
@@ -180,6 +180,7 @@ async def _(session: CommandSession):
     session.state[session.current_key] = stripped_arg
 
 
+# 干货的参数处理器
 @info_gank.args_parser
 async def _(session: CommandSession):
     stripped_arg = session.current_arg_text.strip()
