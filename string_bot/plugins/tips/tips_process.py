@@ -215,7 +215,7 @@ async def audit_ust():
 
 
 async def audit(tips_id, audit_bool):
-    coon = sqlite3.connect(r'.\data\data.db')
+    coon = sqlite3.connect('./data/data.db')
     cursor = coon.cursor()
 
     if audit_bool == '好':

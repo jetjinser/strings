@@ -5,7 +5,8 @@ import time
 
 async def get_today_in_history():
     url = 'https://api.ooopn.com/history/api.php'
-    r = requests.get(url)
+    params = {'count': 1}
+    r = requests.get(url, params)
     response_dict = r.json()
     history = response_dict['content']
     return random.choice(history)
@@ -182,7 +183,7 @@ async def get_isbn_book(isbn):
     return msg
 
 
-# 下次一定
+# 下次一定做图
 async def get_steam_sale_list() -> str:
     header = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '

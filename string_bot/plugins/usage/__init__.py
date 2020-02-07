@@ -13,7 +13,7 @@ async def _(session: CommandSession):
         await session.send(
             '我现在支持的功能有：\n\n' + '\n'.join(p.name for p in plugins) +
             '\n\n详情请输入 帮助 [指令], 如  帮助 信息' +
-            '\n了解更多请查看 https://github.com/jinserrr/strings/blob/master/README.md')
+            '\n了解更多请访问 https://jinser.xyz/')
         return
 
     # 如果发了参数则发送相应命令的使用帮助
