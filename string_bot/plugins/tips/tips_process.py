@@ -6,7 +6,7 @@ from .cuprum import *
 async def submit_ust(tips, user_id):
     if await cuprum(user_id, 20):
         try:
-            coon = sqlite3.connect(r'.\data\data.db')
+            coon = sqlite3.connect('./data/data.db')
             cursor = coon.cursor()
 
             sql_select = (
@@ -41,7 +41,7 @@ async def submit_ust(tips, user_id):
 async def modify_ust(tips, user_id, tips_id):
     if await cuprum(user_id, 5):
         try:
-            coon = sqlite3.connect(r'.\data\data.db')
+            coon = sqlite3.connect('./data/data.db')
             cursor = coon.cursor()
 
             sql_select = (
@@ -85,7 +85,7 @@ async def modify_ust(tips, user_id, tips_id):
 
 
 async def move_in_tips(tips_id):
-    coon = sqlite3.connect(r'.\data\data.db')
+    coon = sqlite3.connect('./data/data.db')
     cursor = coon.cursor()
 
     sql_select = (
@@ -107,7 +107,7 @@ async def move_in_tips(tips_id):
 
 
 async def get_ust(user_id, tips_id):
-    coon = sqlite3.connect(r'.\data\data.db')
+    coon = sqlite3.connect('./data/data.db')
 
     cursor = coon.cursor()
 
@@ -123,7 +123,7 @@ async def get_ust(user_id, tips_id):
 
 async def get_ust_msg(user_id, nah=True):
     try:
-        coon = sqlite3.connect(r'.\data\data.db')
+        coon = sqlite3.connect('./data/data.db')
         cursor = coon.cursor()
 
         if nah:
@@ -162,7 +162,7 @@ async def get_ust_msg(user_id, nah=True):
 
 async def delete_ust(user_id, tips_id):
     if await cuprum(user_id, 1):
-        coon = sqlite3.connect(r'.\data\data.db')
+        coon = sqlite3.connect('./data/data.db')
         cursor = coon.cursor()
 
         sql_select = (
@@ -196,7 +196,7 @@ async def delete_ust(user_id, tips_id):
 
 async def audit_ust():
     try:
-        coon = sqlite3.connect(r'.\data\data.db')
+        coon = sqlite3.connect('./data/data.db')
         cursor = coon.cursor()
 
         sql_select = (
@@ -215,7 +215,7 @@ async def audit_ust():
 
 
 async def audit(tips_id, audit_bool):
-    coon = sqlite3.connect(r'.\data\data.db')
+    coon = sqlite3.connect('./data/data.db')
     cursor = coon.cursor()
 
     if audit_bool == '好':

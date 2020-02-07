@@ -81,9 +81,15 @@ async def info_gank(session: CommandSession):
     gank_type = session.get('gank_type', prompt='')
 
 
-@cg.command('steam', aliases=['steam sale', 'steam促销', 'steam优惠'])
+@cg.command('steam', aliases=['steamsale', 'steam促销', 'steam优惠'])
 async def info_steam(session: CommandSession):
-    msg = await get_steam_sale()
+    msg = await get_steam_sale_list()
+    await session.send(msg)
+
+
+@cg.command('steam_list', aliases=['steamsales', 'steam促销列表', 'steam优惠列表'])
+async def info_steam(session: CommandSession):
+    msg = await get_steam_sale_list()
     await session.send(msg)
 
 
