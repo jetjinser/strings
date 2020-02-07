@@ -232,7 +232,7 @@ async def audit(tips_id, audit_bool):
         return True
     else:
         sql_update = (
-            'UPDATE ust SET audit=0 WHERE id=?;'
+            'DELETE FROM ust WHERE id=?;'
         )
 
         cursor.execute(sql_update, (tips_id,))
