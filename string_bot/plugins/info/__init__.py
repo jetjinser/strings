@@ -83,7 +83,7 @@ async def info_gank(session: CommandSession):
 
 @cg.command('steam', aliases=['steamsale', 'steam促销', 'steam优惠'])
 async def info_steam(session: CommandSession):
-    msg = await get_steam_sale_list()
+    msg = await get_steam_sale()
     await session.send(msg)
 
 
