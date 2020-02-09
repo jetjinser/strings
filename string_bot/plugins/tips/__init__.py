@@ -75,7 +75,7 @@ async def tips_delete(session: CommandSession):
 async def tips_audit(session: CommandSession):
     value, aud_id = await audit_ust()
     if value:
-        aud = session.get('aud', prompt=f'{value}')
+        aud = session.get('aud', prompt=value)
         audit_bool = await audit(aud_id, aud)
 
         if audit_bool:

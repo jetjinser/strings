@@ -5,7 +5,8 @@ import time
 
 async def get_today_in_history():
     url = 'https://api.ooopn.com/history/api.php'
-    r = requests.get(url)
+    params = {'count': 1}
+    r = requests.get(url, params)
     response_dict = r.json()
     history = response_dict['content']
     return random.choice(history)
@@ -145,8 +146,9 @@ async def get_steam_sale() -> str:
     return msg
 
 
-async def get_calendar() -> str:
-    date = time.strftime('%Y%m%d', time.localtime(time.time()))
+async def get_calendar(date=None) -> str:
+    if not date:
+        date = time.strftime('%Y%m%d', time.localtime(time.time()))
     url = f'https://www.mxnzp.com/api/holiday/single/{date}'
     r = requests.get(url)
     response_dict = r.json()
@@ -180,7 +182,8 @@ async def get_isbn_book(isbn):
 
     return msg
 
-# 下次一定
+
+# 下次一定做图
 async def get_steam_sale_list() -> str:
     header = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -194,13 +197,27 @@ async def get_steam_sale_list() -> str:
     data = resp['data']
 
     msg = '\n'
-    # detail = random.sample(data, 5)
-    formatted = []
-    for d in data:
-        formatted.append(
-            d['name'] + '   ' + d['saleRate'] + '\n原价: ￥' + d['oldPrice'] + '   现价: ￥' +
-            d['nowPrice'] + '\n平台: ' + d['platform'] + '\n' + d['rateInfo'].replace('<br>', '  ') +
-            f'https://store.steampowered.com/app/{d["aid"]}'
-        )
+
+    details = random.sample(data, 3)
+    formatted = (
+        [detail['name'] + '   ' + detail['saleRate'] + '\n原价: ￥' + detail['oldPrice'] + '   现价: ￥' +
+         detail['nowPrice'] + '\n平台: ' + detail['platform'] + '\n' + detail['rateInfo'].replace('<br>', '  ') +
+         f'https://store.steampowered.com/app/{detail["aid"]}' for detail in details]
+    )
+
     msg = msg.join(formatted)
     return str(msg)
+
+
+async def get_edu_news() -> str:
+    header = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/79.0.3945.79 Safari/537.36'}
+    resp = requests.get('https://jiemodui.com/Home/EditCate/getRelNews?cateId=54&page=1', headers=header)
+    resp = resp.json()
+    if resp['code'] == '000':
+        data = random.sample(resp['list'], 1)[0]
+        split = '\n'
+        return split.join([data['name'],data['brief'],'https://jiemodui.com/N/'+data['id']+'.html'])
+    else:
+        return ''
