@@ -53,11 +53,11 @@ async def chick_in_cmd(session: CommandSession):
                 image.remove()
             else:
                 # 把这个文件复制到docker挂载的coolq的文件夹里才能识别到
-                copyfile('cache/'+ uid + '.png', '/home/ubuntu/coolq-pro/data/'+ uid + '.png')
-                await session.send('[CQ:image,file=file:///data/'+ uid + '.png]')
+                copyfile('cache/'+ uid + '.png', '/home/ubuntu/coolq-pro/data/'+ str(uid) + '.png')
+                await session.send('[CQ:image,file=file:///data/'+ str(uid) + '.png]')
                 # await session.send('[CQ:image,file=file:///cache/'+ str(uid) + '.png]')
                 image.remove()
-                os.remove('/home/ubuntu/coolq-pro/data/'+ uid + '.png')
+                os.remove('/home/ubuntu/coolq-pro/data/'+ str(uid) + '.png')
         else:
             await session.send('您今天已经签到过了')
     except IndexError:
