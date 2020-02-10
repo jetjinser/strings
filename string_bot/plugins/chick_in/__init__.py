@@ -3,7 +3,7 @@ from .chick_in_system import *
 from .check_in_image import ImageProcessing
 from .data_source import get_image
 from shutil import copyfile
-
+import os
 __plugin_name__ = '签到'
 __plugin_usage__ = r"""签到服务
 
