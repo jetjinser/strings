@@ -197,6 +197,7 @@ async def get_steam_sale_list() -> str:
     data = resp['data']
 
     msg = '\n'
+
     details = random.sample(data, 3)
     formatted = (
         [detail['name'] + '   ' + detail['saleRate'] + '\n原价: ￥' + detail['oldPrice'] + '   现价: ￥' +
@@ -205,5 +206,18 @@ async def get_steam_sale_list() -> str:
     )
 
     msg = msg.join(formatted)
-
     return str(msg)
+
+
+async def get_edu_news() -> str:
+    header = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/79.0.3945.79 Safari/537.36'}
+    resp = requests.get('https://jiemodui.com/Home/EditCate/getRelNews?cateId=54&page=1', headers=header)
+    resp = resp.json()
+    if resp['code'] == '000':
+        data = random.sample(resp['list'], 1)[0]
+        split = '\n'
+        return split.join([data['name'],data['brief'],'https://jiemodui.com/N/'+data['id']+'.html'])
+    else:
+        return ''

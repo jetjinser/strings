@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 import sqlite3
-
+import os
 
 class ImageProcessing:
     """
@@ -145,3 +145,6 @@ class ImageProcessing:
         保存图片
         """
         self.process().save('./cache/' + self._name + '.png')
+
+    def remove(self):
+        os.remove('./cache/' + self._name + '.png')

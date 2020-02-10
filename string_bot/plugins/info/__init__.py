@@ -87,6 +87,12 @@ async def info_steam(session: CommandSession):
     await session.send(msg)
 
 
+@cg.command('steam_list', aliases=['steamsales', 'steam促销列表', 'steam优惠列表'])
+async def info_steam(session: CommandSession):
+    msg = await get_steam_sale_list()
+    await session.send(msg)
+
+
 @cg.command('isbn', aliases=['isbn', 'isbn查询', 'ISBN', 'ISBN查询', '书号查询'])
 async def info_isbn(session: CommandSession):
     isbn = session.get('isbn', prompt='请输入要查询的书号')

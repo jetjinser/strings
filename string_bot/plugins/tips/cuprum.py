@@ -3,7 +3,7 @@ import sqlite3
 
 async def cuprum(user_id, num=None):
     try:
-        coon = sqlite3.connect(r'.\data\data.db')
+        coon = sqlite3.connect('./data/data.db')
         cursor = coon.cursor()
 
         sql_select = (
@@ -37,7 +37,7 @@ async def cuprum(user_id, num=None):
 
 async def get_cuprum(user_id):
     try:
-        coon = sqlite3.connect(r'.\data\data.db')
+        coon = sqlite3.connect('./data/data.db')
         cursor = coon.cursor()
 
         sql_select = (
