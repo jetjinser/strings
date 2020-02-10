@@ -53,7 +53,7 @@ async def chick_in_cmd(session: CommandSession):
                 image.remove()
             else:
                 # 把这个文件复制到docker挂载的coolq的文件夹里才能识别到
-                copyfile('cache/'+ uid + '.png', '/home/ubuntu/coolq-pro/data/'+ str(uid) + '.png')
+                copyfile('cache/'+ str(uid) + '.png', '/home/ubuntu/coolq-pro/data/'+ str(uid) + '.png')
                 await session.send('[CQ:image,file=file:///data/'+ str(uid) + '.png]')
                 # await session.send('[CQ:image,file=file:///cache/'+ str(uid) + '.png]')
                 image.remove()
