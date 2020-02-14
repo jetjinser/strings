@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
-import sqlite3
+from sql_exe import *
 import os
+
 
 class ImageProcessing:
     """
@@ -75,20 +76,17 @@ class ImageProcessing:
         target = Image.new('RGBA', (640, 640), (0, 0, 0, 0))
         # 贴上高斯模糊后的图片
         target.paste(self.gaussian_blur())
-        target.show()
 
         # 创建小图标的框架
         framework = Image.open('./data/framework.png').convert('L')
         framework = framework.resize((size + 30, size + 30))
         target_l = Image.new('RGBA', (size + 30, size + 30), (0, 0, 0, 0))
         target_l.putalpha(framework)
-        target_l.show()
 
         # 贴上小图标的框架
         target.paste(target_l,
                      (w // 2 - size // 2 - 15, w // 2 - size // 2 - 50 - 15),
                      target_l)
-        target.show()
 
         # 在原图中间 y-50 的位置贴上小图标
         target.paste(self.alpha_circle(),
@@ -116,20 +114,12 @@ class ImageProcessing:
 
             count += 1
 
-        coon = sqlite3.connect('./data/data.db')
-
-        cursor = coon.cursor()
-
         sql_select = (
             'SELECT tips FROM tips ORDER BY RANDOM() limit 1;'
         )
 
-        cursor.execute(sql_select)
-        values = str(cursor.fetchall()[0][0])
-
-        cursor.close()
-        coon.commit()
-        coon.close()
+        values = sql_exe(sql_select)
+        values = str(values[0][0])
 
         # 写入tips
         draw = ImageDraw.Draw(target)

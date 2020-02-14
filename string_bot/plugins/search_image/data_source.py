@@ -107,12 +107,21 @@ async def to_isearch_saucenao(original_image_url, boo: bool):
         else:
             msg = img_url + msg
     else:
-        img_url = header['thumbnail']
-        msg = '\n' + title + '\n相似度：' + str(similarity) + '%\n' + ext_url
-        if boo:
-            msg = f'[CQ:image,file={img_url}]' + msg
-        else:
-            msg = img_url + msg
+        try:
+            img_url = header['thumbnail']
+            msg = '\n' + title + '\n相似度：' + str(similarity) + '%\n' + ext_url
+            if boo:
+                msg = f'[CQ:image,file={img_url}]' + msg
+            else:
+                msg = img_url + msg
+        except TypeError:
+            pixiv_id = data['source'].split('/')[-1]
+            img_url = f'https://pixiv.cat/{pixiv_id}.jpg'
+            msg = '\n' + '作者 ' + data['creator'] + '\nmaterial ' + data['material'] + '\n' + data['ext_urls'][0]
+            if boo:
+                msg = f'[CQ:image,file={img_url}]' + msg
+            else:
+                msg = img_url + msg
 
     return msg
 

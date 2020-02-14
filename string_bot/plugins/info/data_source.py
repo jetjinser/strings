@@ -1,15 +1,39 @@
 import requests
 import random
 import time
+from datetime import datetime
+import re
+from random import choice
 
 
 async def get_today_in_history():
-    url = 'https://api.ooopn.com/history/api.php'
-    params = {'count': 1}
-    r = requests.get(url, params)
-    response_dict = r.json()
-    history = response_dict['content']
-    return random.choice(history)
+    dr = re.compile(r'<[^>]+>', re.S)
+
+    date = datetime.today()
+    f_date = date.strftime('%m%d')
+
+    url = f'https://baike.baidu.com/cms/home/eventsOnHistory/{f_date[:2]}.json'
+    header = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'}
+
+    resp = requests.get(url, headers=header)
+
+    data = resp.json()[f_date[:2]][f_date]
+
+    detail = choice(data)
+
+    year = detail['year']
+    festival = detail['festival']
+    title = dr.sub('', detail['title'])
+    desc = dr.sub('', detail['desc'])
+
+    if festival:
+        msg = '🎉今天是' + festival + '🎉\n' + year + '年 | ' + title + desc
+    else:
+        msg = year + '年 | ' + title + desc
+
+    return msg
 
 
 async def get_one_sentence_a_day():
@@ -66,7 +90,25 @@ async def get_news():
     return content
 
 
-async def get_weather_of_city(city: str, date: str = None) -> str:
+async def get_weather_of_city(city: str) -> str:
+    url = f'https://api.ooopn.com/weather/api.php?city={city}'
+    try:
+        r = requests.post(url)
+        resp = r.json()
+        dialect = resp['data']['forecast'][0]
+        formatted = (
+                resp['data']['city'] + '  ' + dialect['type'] + '  ' + dialect['date'] + '\n' + '当前温度 '
+                + resp['data']['wendu'] + '℃' + '\n' + dialect['fengxiang'] + '  '
+                + dialect['fengli'].lstrip('<![CDATA[').rstrip(']]>') + '\n' + '最高温度' + dialect['high'][3:]
+                + '\n' + '最低温度' + dialect['low'][3:] + '\n' +
+                resp['data']['ganmao']
+        )
+    except KeyError:
+        return 'error,无数据或语法错误'
+    return formatted
+
+
+async def get_weather_of_city_n_date(city: str, date: str):
     if date == '今天' or not date:
         date = 0
     elif date == '明天':
@@ -77,6 +119,8 @@ async def get_weather_of_city(city: str, date: str = None) -> str:
         date = 3
     elif date == '大大后天':
         date = 4
+    else:
+        return '日期不支持'
     url = f'https://api.ooopn.com/weather/api.php?city={city}'
     try:
         r = requests.post(url)
@@ -218,6 +262,6 @@ async def get_edu_news() -> str:
     if resp['code'] == '000':
         data = random.sample(resp['list'], 1)[0]
         split = '\n'
-        return split.join([data['name'],data['brief'],'https://jiemodui.com/N/'+data['id']+'.html'])
+        return split.join([data['name'], data['brief'], 'https://jiemodui.com/N/' + data['id'] + '.html'])
     else:
         return ''

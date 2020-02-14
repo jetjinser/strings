@@ -15,7 +15,8 @@ from nonebot.helpers import context_id, render_expression
 #     '抱歉哦，我现在的能力还不能够明白你在说什么，但我会加油的～'
 # )
 EXPR_DONT_UNDERSTAND = (
-    '？'
+    '？',
+    '请求次数超限制!'
 )
 
 

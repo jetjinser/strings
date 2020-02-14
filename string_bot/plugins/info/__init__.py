@@ -1,5 +1,9 @@
 from nonebot import CommandGroup, CommandSession
+from nonebot import on_natural_language, NLPSession, IntentCommand
 from datetime import date, timedelta
+from jieba import posseg
+
+
 from .data_source import *
 
 __plugin_name__ = '信息'
@@ -62,11 +66,18 @@ async def info_news(session: CommandSession):
     await session.send(msg)
 
 
-@cg.command('weather', aliases=['天气', '查天气', '最近什么天气', '最近天气怎么样'])
+@cg.command('weather', aliases=['天气', '今天天气'])
 async def info_weather(session: CommandSession):
     city = session.get('city', prompt='你想查哪个城市?')
-    the_date = session.get('date', prompt='你想查哪一天?')
-    msg = await get_weather_of_city(city, the_date)
+    msg = await get_weather_of_city(city)
+    await session.send(msg)
+
+
+@cg.command('weather_the_date', aliases=['指定天气', '日期指定天气'])
+async def info_weather_the_date(session: CommandSession):
+    city = session.get('city', prompt='你想查哪个城市?')
+    the_date = session.get('the_date', prompt='你想查哪一天?')
+    msg = await get_weather_of_city_n_date(city, the_date)
     await session.send(msg)
 
 
@@ -123,8 +134,8 @@ async def _(session: CommandSession):
     session.state[session.current_key] = stripped_arg
 
 
-# 天气的参数处理器
-@info_weather.args_parser
+# 带日期参数的天气的参数处理器
+@info_weather_the_date.args_parser
 async def _(session: CommandSession):
     stripped_arg = session.current_arg_text.strip()
 
@@ -142,6 +153,22 @@ async def _(session: CommandSession):
             session.pause('要查询的城市名称不能为空呢，请重新输入')
 
         session.pause('要查询的日期不能为空呢，请重新输入')
+
+    session.state[session.current_key] = stripped_arg
+
+
+# 天气的参数处理器
+@info_weather.args_parser
+async def _(session: CommandSession):
+    stripped_arg = session.current_arg_text.strip()
+
+    if session.is_first_run:
+        if stripped_arg:
+            session.state['city'] = stripped_arg.split()[0]
+        return
+
+    if not stripped_arg:
+        session.pause('查个城市?')
 
     session.state[session.current_key] = stripped_arg
 
@@ -211,3 +238,17 @@ async def _(session: CommandSession):
         session.finish()
 
     session.state[session.current_key] = stripped_arg
+
+
+@on_natural_language(keywords={'天气'})
+async def _(session: NLPSession):
+    stripped_msg = session.msg_text.strip()
+    words = posseg.lcut(stripped_msg)
+
+    city = None
+    for word in words:
+        if word.flag == 'ns':
+            city = word.word
+            break
+
+    return IntentCommand(90.0, ('info', 'weather'), current_arg=city or '')

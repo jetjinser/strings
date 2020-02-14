@@ -1,22 +1,15 @@
-import sqlite3
+from sql_exe import *
 
 
 async def cuprum(user_id, num=None):
     try:
-        coon = sqlite3.connect('./data/data.db')
-        cursor = coon.cursor()
-
         sql_select = (
             'SELECT user_coin FROM user WHERE user_id=?;'
         )
 
-        cursor.execute(sql_select, (user_id,))
-        values = cursor.fetchall()[0][0]
+        values = sql_exe(sql_select, (user_id,))[0][0]
 
         if values - num < 0:
-            cursor.close()
-            coon.commit()
-            coon.close()
             return False
         else:
             updated_num = values - num
@@ -24,11 +17,7 @@ async def cuprum(user_id, num=None):
                 'UPDATE user SET user_coin=? WHERE user_id=?;'
             )
 
-            cursor.execute(sql_update, (updated_num, user_id))
-
-            cursor.close()
-            coon.commit()
-            coon.close()
+            sql_exe(sql_update, (updated_num, user_id))
 
             return num
     except IndexError:
@@ -37,21 +26,12 @@ async def cuprum(user_id, num=None):
 
 async def get_cuprum(user_id):
     try:
-        coon = sqlite3.connect('./data/data.db')
-        cursor = coon.cursor()
-
         sql_select = (
             'SELECT user_coin FROM user WHERE user_id=?;'
         )
 
-        cursor.execute(sql_select, (user_id,))
-        coin = cursor.fetchall()[0][0]
-
-        cursor.close()
-        coon.commit()
-        coon.close()
+        coin = sql_exe(sql_select, (user_id,))[0][0]
 
         return coin
     except IndexError:
         return
-

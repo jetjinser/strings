@@ -1,27 +1,22 @@
 from random import randint
 from datetime import datetime
-import sqlite3
+from sql_exe import *
 
 
 # 用户注册函数
 def user_registration(ctx):
-    coon = sqlite3.connect('./data/data.db')
-    cursor = coon.cursor()
-
     user_id = ctx['sender']['user_id']
     user_nickname = ctx['sender']['nickname']
-    user_card = ctx.get('sender').get('card') if ctx.get('sender').get('card') else 'NULL'
+    user_card = ctx.get('sender').get('_card') if ctx.get('sender').get('_card') else 'NULL'
 
     sql_insert = (
         'INSERT INTO user VALUES ('
         'NULL, ?, ?, ?, ?, ?, ?, ?);'
     )
 
-    cursor.execute(sql_insert, (user_id, user_nickname, user_card, 0, 0, 0, '2019-01-01'))
+    sql_args = (user_id, user_nickname, user_card, 0, 0, 0, '2019-01-01')
 
-    cursor.close()
-    coon.commit()
-    coon.close()
+    sql_exe(sql_insert, sql_args)
 
 
 # 用户好感算法
@@ -62,9 +57,6 @@ def coin_algorithm(favor: int, coin: int):  # favor
 
 # 签到函数
 def chick_in(user_id: int):
-    coon = sqlite3.connect('./data/data.db')
-    cursor = coon.cursor()
-
     data = get_chick_info(user_id)
     user_coin = data[4]
     user_favor = data[5]
@@ -83,31 +75,19 @@ def chick_in(user_id: int):
         f'last_chick_in_time = ? '
         f'WHERE user_id = ?;'
     )
+    sql_args = (up_user_coin, up_user_favor, up_chick_in_days, up_last_chick_in_time, user_id)
 
-    cursor.execute(sql_update, (up_user_coin, up_user_favor, up_chick_in_days, up_last_chick_in_time, user_id))
-
-    cursor.close()
-    coon.commit()
-    coon.close()
+    sql_exe(sql_update, sql_args)
 
 
 # 验证是否在一天内重复签到
 def check_in_interval_judgment(user_id: int):
-    coon = sqlite3.connect('./data/data.db')
-    cursor = coon.cursor()
-
     sql_select = (
         f'select * from user where user_id={user_id};'
     )
 
-    cursor.execute(sql_select)
-
-    data = cursor.fetchall()
+    data = sql_exe(sql_select)
     data = data[0]
-
-    cursor.close()
-    coon.commit()
-    coon.close()
 
     if data[7] == datetime.today().strftime('%Y-%m-%d'):
         return False
@@ -116,38 +96,21 @@ def check_in_interval_judgment(user_id: int):
 
 
 def get_chick_info(user_id: int):
-    coon = sqlite3.connect('./data/data.db')
-    cursor = coon.cursor()
-
     sql_select = (
-        f'select * from user where user_id={user_id};'
+        f'select * from user where user_id=?;'
     )
 
-    cursor.execute(sql_select)
-
-    data = cursor.fetchall()
-
-    cursor.close()
-    coon.commit()
-    coon.close()
+    data = sql_exe(sql_select, (user_id,))
 
     return data[0]
 
 
 def user_registration_interval_judgment(user_id):
-    coon = sqlite3.connect('./data/data.db')
-    cursor = coon.cursor()
-
     sql_select = (
         f"select 1 from user where user_id = ? limit 1;"
     )
 
-    cursor.execute(sql_select, (user_id,))
-    values = cursor.fetchall()
-
-    cursor.close()
-    coon.commit()
-    coon.close()
+    values = sql_exe(sql_select, (user_id,))
 
     if values:
         return False
@@ -164,11 +127,14 @@ def chick_in_text(user_id: int, name: str) -> str:
     return text
 
 
-def get_chick_in_check(user_id: int) -> str:
+def get_chick_in_check(user_id: int, boo_s='') -> str:
     data = get_chick_info(user_id)
     name = data[2]
     coin = data[4]
     favor = data[5]
     cid = data[6]
-    text = f'{name}\nCuprum {coin}\n签到天数    {cid}     好感度    {favor}'
+    if boo_s:
+        text = f'{name}\nCuprum {coin}    {boo_s}\n签到天数    {cid}     好感度    {favor}'
+    else:
+        text = f'{name}\nCuprum {coin}\n签到天数    {cid}     好感度    {favor}'
     return text
