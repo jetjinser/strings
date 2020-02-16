@@ -1,6 +1,7 @@
 from nonebot import CommandGroup, CommandSession
 import os
 import random
+from shutil import copyfile
 from .languages_image import LanguagesImage
 from .run_source import *
 
@@ -29,6 +30,7 @@ async def code_languages_list(session: CommandSession):
     img = LanguagesImage(im, text_out)
     filename = 'data/language_list.png'
     img.save(filename)
+    copyfile(filename, '/home/ubuntu/coolq-pro/data/' + f'{filename}.png')
     await session.send(f'[CQ:image,file={filename}]')
 
 

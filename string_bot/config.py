@@ -1,4 +1,5 @@
 from nonebot.default_config import *
+from datetime import timedelta
 
 HOST = '127.0.0.1'
 PORT = 8080
@@ -14,3 +15,4 @@ TOO_MANY_VALIDATION_FAILURES_EXPRESSION = (
     'wdnmd',
     '?'
 )
+SESSION_EXPIRE_TIMEOUT = timedelta(minutes=2)
