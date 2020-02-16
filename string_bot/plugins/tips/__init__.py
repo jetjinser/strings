@@ -17,9 +17,12 @@ async def tips_submit(session: CommandSession):
 
     user_id = session.ctx['sender']['user_id']
 
-    msg = await submit_ust(sub_tips, user_id)
-    coin = await get_cuprum(user_id)
-    await session.send(msg + f'  当前铜币:{coin}')
+    if already_exists(sub_tips):
+        msg = await submit_ust(sub_tips, user_id)
+        coin = await get_cuprum(user_id)
+        await session.send(msg + f'  当前铜币:{coin}')
+    else:
+        session.finish('该tips已存在')
 
 
 @cg.command('modify', aliases=['修改tips', 'tips修改', '修改'])

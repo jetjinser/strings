@@ -19,9 +19,9 @@ async def registered(session: CommandSession):
 
     if user_registration_interval_judgment(user_id):
         user_registration(session.ctx)
-        await session.send('注册成功!')
+        await session.send('注册成功!💃💃💃')
     else:
-        await session.send('您已经注册过了')
+        await session.send('您已经注册过了🙌')
 
 
 @cg.command('chick_in_cmd', aliases=['签到'])
@@ -76,4 +76,4 @@ async def chick_in_check(session: CommandSession):
             msg = get_chick_in_check(user_id, '今日未签到❌')
         await session.send(msg)
     except IndexError:
-        await session.send('您还没有注册')
+        await session.send('您还没有注册👀')

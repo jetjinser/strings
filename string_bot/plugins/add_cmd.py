@@ -41,7 +41,7 @@ async def add_cmd(session: CommandSession):
     # TODO
     #  判断数据库和原代码中是否已存在 ✔
     #  设置群内命令 ✔
-    #  设置全局命令
+    #  ~~设置全局命令~~ 暂时否决
     #  @ (和图片) 优化
 
     base_cmd = ['yyy', '嘤一下', '嘤一个', '来嘤', 'kusa', '草', 'robot', '机屑人', 'string', '五十弦', 'mua', 'mua~',

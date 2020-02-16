@@ -92,7 +92,7 @@ async def get_ust_msg(user_id, nah=True):
             data = sql_exe(sql_select, (user_id, 0))
         else:
             sql_select = (
-                f'SELECT * FROM ust WHERE user_id=?;'
+                'SELECT * FROM ust WHERE user_id=?;'
             )
             data = sql_exe(sql_select, (user_id,))
 
@@ -163,3 +163,20 @@ async def audit(tips_id, audit_bool):
         sql_exe(sql_update, (tips_id,))
 
         return False
+
+
+async def already_exists(submit_tip):
+    sql = (
+        'SELECT tips FROM tips;'
+    )
+    tips = sql_exe(sql)
+
+    sql2 = (
+        'SELECT tips FROM ust;'
+    )
+    tips2 = sql_exe(sql2)
+
+    if submit_tip in tips or submit_tip in tips2:
+        return False
+    else:
+        return True

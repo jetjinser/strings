@@ -10,5 +10,4 @@ if __name__ == '__main__':
     nonebot.load_plugins(
         path.join(path.dirname(__file__), 'plugins'),
         'plugins')
-    # nonebot.run(host='172.17.0.1', port=8080)
     nonebot.run(host='127.0.0.1', port=8080)

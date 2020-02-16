@@ -66,7 +66,7 @@ async def fast_rumor(session: CommandSession):
     # 怪怪怪, 傻傻傻
     next_cmd = ['next', '下一条']
     msg_list = await get_rumor_list()
-    m = f'\n回复{" / ".join(next_cmd)}来查看下一条'
+    m = f'\n回复{" / ".join(next_cmd)}来查看下一条⎘'
     whether_next = session.get('whether_next', prompt=msg_list[0] + m)
     if whether_next in next_cmd:
         whether_next2 = session.get('whether_next2', prompt=msg_list[1] + m)

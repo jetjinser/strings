@@ -11,7 +11,7 @@ cg = CommandGroup('new_animation', only_to_me=False)
 
 @cg.command('新番', aliases=['新番时间表', '新番'])
 async def new_animation(session: CommandSession):
-    q_type = session.get('type', prompt='国创or番剧？')
+    q_type = session.get('type', prompt='⌘国创or番剧？⌘')
     result_str = ''
     q_type_int = 0 if q_type.find("国创") > -1 else 1
     time_line = await get_time_line(q_type_int)
@@ -35,5 +35,5 @@ async def _(session: CommandSession):
         return
 
     if not stripped_arg:
-        session.pause('国创or番剧？')
+        session.pause('⌘国创or番剧？⌘')
     session.state[session.current_key] = stripped_arg
