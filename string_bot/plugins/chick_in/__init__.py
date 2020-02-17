@@ -61,7 +61,7 @@ async def chick_in_cmd(session: CommandSession):
                 os.remove('/home/ubuntu/coolq-pro/data/' + str(uid) + '.png')
         else:
             await session.send('您今天已经签到过了')
-    except IndexError:
+    except (IndexError, TypeError):
         await session.finish('请发送"注册"  来完成注册!')
 
 

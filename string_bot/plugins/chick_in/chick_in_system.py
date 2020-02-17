@@ -81,12 +81,12 @@ def chick_in(user_id: int):
 
 
 # 验证是否在一天内重复签到
-def check_in_interval_judgment(user_id: int):
+def check_in_interval_judgment(user_id):
     sql_select = (
-        f'select * from user where user_id={user_id};'
+        f'select * from user where user_id=?;'
     )
 
-    data = sql_exe(sql_select)
+    data = sql_exe(sql_select, (user_id,))
     data = data[0]
 
     if data[7] == datetime.today().strftime('%Y-%m-%d'):

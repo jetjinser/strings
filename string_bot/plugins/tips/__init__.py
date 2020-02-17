@@ -1,4 +1,5 @@
 from nonebot import CommandSession, CommandGroup
+from nonebot.command.argfilter import controllers
 from nonebot.permission import *
 from .tips_process import *
 from .cuprum import get_cuprum
@@ -13,7 +14,7 @@ cg = CommandGroup('tips', only_to_me=False)
 
 @cg.command('submit', aliases=['提交tips', 'tips提交', '提交'])
 async def tips_submit(session: CommandSession):
-    sub_tips = session.get('sub_tips', prompt='请输入你要提交的tips')
+    sub_tips = session.get('sub_tips', prompt='请输入你要提交的tips', arg_filters=[controllers.handle_cancellation(session)])
 
     user_id = session.ctx['sender']['user_id']
 

@@ -36,9 +36,11 @@ async def add_cmd(session: CommandSession):
     # TODO
     #  @ (和图片) 优化
     #  添加全局指令 > 覆写时不好区分 <warning> 下次再做
+    #  签到不能覆盖 暂时解决
+    #  尝试获取指令列表
 
     base_cmd = ['yyy', '嘤一下', '嘤一个', '来嘤', 'kusa', '草', 'robot', '机屑人', 'string', '五十弦', 'mua', 'mua~',
-                'zaima', 'nihao', 'wei,zaima', 'wei，zaima', 'nihao', '你好', '泥嚎', 'help', '怎么用', '怎么玩']
+                'zaima', 'nihao', 'wei,zaima', 'wei，zaima', 'nihao', '你好', '泥嚎', 'help', '怎么用', '怎么玩', '签到', '注册']
     name_list = ['五十弦', '弦', 'hello', 'Hello', 'hi', 'Hi']
     if question in base_cmd:
         session.finish('与内置指令冲突🔧')
@@ -52,9 +54,9 @@ async def add_cmd(session: CommandSession):
     if q_list:
         if (question,) in q_list:
             sql_select_question = (
-                'SELECT A FROM cmd WHERE Q=?;'
+                'SELECT A FROM cmd WHERE Q=? AND group_id=?;'
             )
-            b_answer = sql_exe(sql_select_question, (question,))[0]
+            b_answer = sql_exe(sql_select_question, (question, group_id))[0]
 
             # msg = session.ctx.get('message')
             # msg = str(msg)
@@ -75,11 +77,11 @@ async def add_cmd(session: CommandSession):
             #         session.finish('与全局指令冲突')
 
             sql_rewrite = (
-                'UPDATE cmd SET A=? WHERE Q=?;'
+                'UPDATE cmd SET A=? WHERE Q=? AND group_id=?;'
             )
-            sql_exe(sql_rewrite, (answer, question))
+            sql_exe(sql_rewrite, (answer, question, group_id))
 
-            session.finish(f'已覆盖原指令回答<{b_answer}>\n当前指令:\n<Q>{question}</Q>\n<A>{answer}</A>')
+            session.finish(f'已覆盖原指令回答<{b_answer[0]}>\n当前指令:\n<Q>{question}</Q>\n<A>{answer}</A>')
 
     sql_insert = (
         'INSERT INTO cmd VALUES (NULL, ?, ?, ?, ?, ?, ?);'
@@ -97,6 +99,18 @@ async def empty_finish(session: CommandSession):
     question = session.get('question')
     answer = session.get('answer')
     session.finish(f'⭷添加失败⇲\n<Q>{question}</Q>\n<A>{answer}</A>\n参数不能为空')
+
+
+@on_command('cancel')
+async def finish(session: CommandSession):
+    question = session.get('question')
+
+    sql = (
+        'DELETE FROM cmd WHERE Q=?;'
+    )
+    sql_exe(sql, (question,))
+
+    session.finish(f'已取消指令<{question}>')
 
 
 # @on_command('finish')
@@ -121,21 +135,11 @@ async def _(session: NLPSession):
     boo = pattern.match(str(msg))
     # boo_global = pattern_global.match(str(msg))
 
-    sql = (
-        'SELECT Q, A, group_id FROM cmd;'
-    )
-    cmd_list = sql_exe(sql)
-
-    for cmd in cmd_list:
-        question = cmd[0]
-        answer = cmd[1]
-        group_id = cmd[2]
-        if (msg == question) and (group_id == ctx_group_id or group_id == 1):
-            return IntentCommand(100, 'user_cmd', args={'answer': answer})
-
     if boo:
         if boo.group(1) and boo.group(2):
             cmd = 'add_cmd'
+        elif boo.group(2):
+            cmd = 'cancel'
         else:
             cmd = 'empty_finish'
         return IntentCommand(100, cmd,
@@ -150,5 +154,18 @@ async def _(session: NLPSession):
     #             cmd = 'empty_finish'
     #         return IntentCommand(100, cmd,
     #                              args={'question': boo_global.group(1), 'answer': boo_global.group(2), 'group_id': 1})
-        # else:
-        #     return IntentCommand(100, 'finish')
+    # else:
+    #     return IntentCommand(100, 'finish')
+
+    sql = (
+        'SELECT A, group_id FROM cmd WHERE Q=?;'
+    )
+    cmd = sql_exe(sql, (msg,))
+
+    if cmd:
+        print('-' * 20)
+        cmd = cmd[0]
+        answer = cmd[0]
+        group_id = cmd[1]
+        if group_id == ctx_group_id or group_id == 1:
+            return IntentCommand(100, 'user_cmd', args={'answer': answer})
