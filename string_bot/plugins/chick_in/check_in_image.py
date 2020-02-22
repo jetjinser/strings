@@ -24,11 +24,11 @@ class ImageProcessing:
         self._name = name
 
         if _image.size != (640, 640):
-            _image.resize((640, 640))
+            _image = _image.resize((640, 640))
 
         self._image = _image
 
-    def gaussian_blur(self):
+    async def gaussian_blur(self):
         """
         高斯模糊处理
         :return: 模糊后的图片
@@ -36,7 +36,7 @@ class ImageProcessing:
         img = self._image.filter(ImageFilter.GaussianBlur(radius=7))
         return img
 
-    def circle(self):
+    async def circle(self):
         """
         alpha圆框
         用于处理小图标
@@ -49,7 +49,7 @@ class ImageProcessing:
 
         return circle
 
-    def alpha_circle(self):
+    async def alpha_circle(self):
         """
         小图标的圆形处理
         :return: 变为圆形的RGBA图片
@@ -57,11 +57,11 @@ class ImageProcessing:
         size = self._small_size
         img = self._image.copy()
         img = img.resize((size, size))
-        img.putalpha(self.circle())
+        img.putalpha(await self.circle())
 
         return img
 
-    def process(self):
+    async def process(self):
         """
         合并处理图片
         创建文字框架
@@ -75,7 +75,7 @@ class ImageProcessing:
         # 创建白色画布
         target = Image.new('RGBA', (640, 640), (0, 0, 0, 0))
         # 贴上高斯模糊后的图片
-        target.paste(self.gaussian_blur())
+        target.paste(await self.gaussian_blur())
 
         # 创建小图标的框架
         framework = Image.open('./data/framework.png').convert('L')
@@ -89,9 +89,9 @@ class ImageProcessing:
                      target_l)
 
         # 在原图中间 y-50 的位置贴上小图标
-        target.paste(self.alpha_circle(),
+        target.paste(await self.alpha_circle(),
                      (w // 2 - size // 2, w // 2 - size // 2 - 50),
-                     self.alpha_circle())
+                     await self.alpha_circle())
 
         # 创建文字框架
         txt_frame = Image.new('RGBA', (540, 160), (0, 0, 0, 190))
@@ -130,11 +130,12 @@ class ImageProcessing:
 
         return target
 
-    def save(self):
+    async def save(self):
         """
         保存图片
         """
-        self.process().save('./cache/' + self._name + '.png')
+        output_img = await self.process()
+        output_img.save('./cache/' + self._name + '.png')
 
-    def remove(self):
+    async def remove(self):
         os.remove('./cache/' + self._name + '.png')

@@ -12,7 +12,8 @@ cg = CommandGroup('translate', only_to_me=False)
 @cg.command('youdao', aliases=['翻译', '有道翻译', 'fanyi', 'translate'])
 async def translate_youdao(session: CommandSession):
     content = session.get('content', prompt='你想翻译什么?')
-    msg = await get_translate(content)
+    # app_key
+    msg = await get_translate(content, app_key='')
     await session.send(msg)
 
 

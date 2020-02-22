@@ -1,27 +1,29 @@
-import urllib.request
-import urllib.parse
-import json
+from .getReqSign import get_req_sign
+import time
+import requests
+from jieba import posseg
 
 
-async def get_translate(content):
-    youdao_url = 'http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule'
-    data = {'i': content, 'from': 'AUTO', 'to': 'AUTO', 'smartresult': 'dict', 'client': 'fanyideskweb',
-            'salt': '1525141473246', 'sign': '47ee728a4465ef98ac06510bf67f3023', 'doctype': 'json',
-            'version': '2.1',
-            'keyfrom': 'fanyi.web', 'action': 'FY_BY_CLICKBUTTION', 'typoResult': 'false'}
+async def get_translate(content, app_key):
+    url = 'https://api.ai.qq.com/fcgi-bin/nlp/nlp_texttranslate'
 
-    data = urllib.parse.urlencode(data).encode('utf-8')
+    t = str(time.time())
+    nonce_str = t
 
-    youdao_response = urllib.request.urlopen(youdao_url, data)
-    youdao_html = youdao_response.read().decode('utf-8')
-    target = json.loads(youdao_html)
+    lan = posseg.lcut(content)
+    for i in lan:
+        if i.flag not in ('eng', 'x'):
+            target = 'zh'
+            break
+    else:
+        target = 'en'
 
-    trans = target['translateResult']
-    ret = ''
-    for i in range(len(trans)):
-        line = ''
-        for j in range(len(trans[i])):
-            line = trans[i][j]['tgt']
-        ret += '译文：' + line
+    params = {'app_id': '2127385692', 'time_stamp': t, 'nonce_str': nonce_str,
+              'sign': '', 'text': content, 'source': 'zh', 'target': target}
 
-    return ret
+    sign = get_req_sign(params, app_key)
+    params['sign'] = sign
+
+    resp = requests.get(url, params)
+
+    return resp.json()['data']['target_text']
