@@ -10,7 +10,7 @@ import base64
 __plugin_name__ = '收费系统'
 __plugin_usage__ = r"""收费系统
 为了填补授权和~~服务器~~的资金
-"""
+https://jinser.xyz/2020/02/22/%E5%85%B3%E4%BA%8E%E6%94%B6%E8%B4%B9%E5%92%8Ctoken/"""
 
 cg = CommandGroup('pay', only_to_me=True)
 

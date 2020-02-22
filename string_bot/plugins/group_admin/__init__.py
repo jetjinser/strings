@@ -72,7 +72,8 @@ async def _(session: NoticeSession):
         interval = d2 - d1
 
         if interval.days < 0:
-            await session.send('试用期已过, 将在五分钟后退群, @我说 token ,并输入相应的token可延长使用时间')
+            await session.send('试用期已过, 将在五分钟后退群, @我说 token ,并输入相应的token可延长使用时间, 详情请查看: '
+                               'https://jinser.xyz/2020/02/22/%E5%85%B3%E4%BA%8E%E6%94%B6%E8%B4%B9%E5%92%8Ctoken/')
             await asyncio.sleep(300)
             # 退群
             await bot.set_group_leave(group_id=group_id)
@@ -90,8 +91,7 @@ async def _(session: NoticeSession):
 
         sql_exe(sql_insert2, (group_id, deadline))
         await session.send('目前正处于试用期, 将在三天后过期, 若要延长使用时间请访问 '
-                           f'{"https://jinser.xyz/2020/02/22/%E5%85%B3%E4%BA%8E%E6%94%B6%E8%B4%B9%E5%92%8Ctoken/"} '
-                           '来查看详情')
+                           'https://jinser.xyz/2020/02/22/%E5%85%B3%E4%BA%8E%E6%94%B6%E8%B4%B9%E5%92%8Ctoken/ 来查看详情')
 
 
 @on_notice('group_decrease')
