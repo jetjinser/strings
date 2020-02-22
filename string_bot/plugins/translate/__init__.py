@@ -13,7 +13,7 @@ cg = CommandGroup('translate', only_to_me=False)
 async def translate_youdao(session: CommandSession):
     content = session.get('content', prompt='你想翻译什么?')
     # app_key
-    msg = await get_translate(content, app_key='')
+    msg = await get_translate(content, app_key='BK8bAiTcKH1BsMoW')
     await session.send(msg)
 
 

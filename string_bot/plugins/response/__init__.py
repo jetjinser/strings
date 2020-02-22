@@ -1,5 +1,12 @@
+import datetime
+from sqlite3 import OperationalError
+
 from nonebot import CommandSession, CommandGroup
 from random import randint
+import time
+
+from plugins.group_admin import timestamp2date_string
+from sql_exe import sql_exe
 
 __plugin_name__ = '回应'
 __plugin_usage__ = r"""应激反应"""
@@ -33,12 +40,28 @@ async def response_robot(session: CommandSession):
         return
 
 
-@cg.command('string', aliases=['五十弦'])
-async def response_string(session: CommandSession):
-    if randint(1, 10) > 3:
-        await session.send('干嘛')
-    else:
-        return
+@cg.command('init', aliases=['init'])
+async def response_init(session: CommandSession):
+    try:
+        init_bot = session.bot
+        init_group_id_list = await init_bot.get_group_list()
+        init_now_date = time.time()
+        init_now_date = timestamp2date_string(init_now_date)
+        for init_group_id in init_group_id_list:
+            sql_insert = (
+                'INSERT INTO deadline VALUES (NULL, ?, ?);'
+            )
+            # +3天
+            i_add_date = datetime.timedelta(days=3)
+
+            i_ny, i_nm, i_nd = map(int, init_now_date.split('-'))
+            i_d1 = datetime.datetime(i_ny, i_nm, i_nd)
+            i_deadline = i_d1 + i_add_date
+            i_deadline = i_deadline.strftime("%Y-%m-%d")
+
+            sql_exe(sql_insert, (init_group_id.get('group_id'), i_deadline))
+    except OperationalError:
+        pass
 
 
 @cg.command('mua', aliases=['mua', 'mua~'])

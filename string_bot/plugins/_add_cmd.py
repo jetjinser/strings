@@ -33,10 +33,6 @@ async def add_cmd(session: CommandSession):
     user_nickname = sender['nickname']
     user_card = sender.get('user_card')
 
-    # TODO
-    #  添加全局指令 > 覆写时不好区分 <warning> 下次再做
-    #  签到不能覆盖 暂时解决
-    #  尝试获取指令列表
     #  **暂时停用**
 
     base_cmd = ['yyy', '嘤一下', '嘤一个', '来嘤', 'kusa', '草', 'robot', '机屑人', 'string', '五十弦', 'mua', 'mua~',
@@ -103,8 +99,6 @@ async def empty_finish(session: CommandSession):
 
 @on_command('cancel')
 async def cancel(session: CommandSession):
-    # TODO 取消指令
-    #  不改了, 干脆重构
     answer = session.get('answer')
 
     sql = (

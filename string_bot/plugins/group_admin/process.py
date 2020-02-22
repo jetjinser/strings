@@ -8,3 +8,12 @@ def timestamp2string(timestamp):
         return str1
     except Exception as e:
         return e
+
+
+def timestamp2date_string(timestamp):
+    try:
+        d = datetime.datetime.fromtimestamp(timestamp)
+        str2 = d.strftime("%Y-%m-%d")
+        return str2
+    except Exception as e:
+        return e
