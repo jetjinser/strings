@@ -168,7 +168,7 @@ async def _(session: CommandSession):
         return
 
     if not stripped_arg:
-        session.pause('查个城市?')
+        session.pause('查哪个城市?')
 
     session.state[session.current_key] = stripped_arg
 
