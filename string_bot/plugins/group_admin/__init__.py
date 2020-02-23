@@ -46,52 +46,53 @@ except OperationalError:
 
 @on_notice('group_increase')
 async def _(session: NoticeSession):
-    if session.ctx['sub_type'] == 'invite':
+    ctx = session.ctx
+    if ctx['sub_type'] == 'invite' and ctx['user_id'] == ctx['self_id']:
         await session.send('大家好')
+
+        bot = session.bot
+        ctx = session.ctx
+        group_id = ctx['group_id']
+
+        sql = (
+            'SELECT deadline FROM deadline WHERE group_id=?'
+        )
+        deadline = sql_exe(sql, (group_id,))
+        now_date = timestamp2date_string(ctx['time'])
+
+        if deadline:
+            deadline = deadline[0][0]
+            ny, nm, nd = map(int, now_date.split('-'))
+            dy, dm, dd = map(int, deadline.split('-'))
+
+            d1 = datetime.datetime(ny, nm, nd)
+            d2 = datetime.datetime(dy, dm, dd)
+
+            interval = d2 - d1
+
+            if interval.days < 0:
+                await session.send('试用期已过, 将在五分钟后退群, @我说 token ,并输入相应的token可延长使用时间, 详情请查看: '
+                                   'https://jinser.xyz/2020/02/22/%E5%85%B3%E4%BA%8E%E6%94%B6%E8%B4%B9%E5%92%8Ctoken/')
+                await asyncio.sleep(300)
+                # 退群
+                await bot.set_group_leave(group_id=group_id)
+        else:
+            sql_insert2 = (
+                'INSERT INTO deadline VALUES (NULL, ?, ?);'
+            )
+            # +3天
+            add_date = datetime.timedelta(days=3)
+
+            ny, nm, nd = map(int, now_date.split('-'))
+            d1 = datetime.datetime(ny, nm, nd)
+            deadline = d1 + add_date
+            deadline = deadline.strftime("%Y-%m-%d")
+
+            sql_exe(sql_insert2, (group_id, deadline))
+            await session.send('目前正处于试用期, 将在三天后过期, 若要延长使用时间请访问 '
+                               'https://jinser.xyz/2020/02/22/%E5%85%B3%E4%BA%8E%E6%94%B6%E8%B4%B9%E5%92%8Ctoken/ 来查看详情')
     else:
         await session.send('欢迎')
-
-    bot = session.bot
-    ctx = session.ctx
-    group_id = ctx['group_id']
-
-    sql = (
-        'SELECT deadline FROM deadline WHERE group_id=?'
-    )
-    deadline = sql_exe(sql, (group_id,))
-    now_date = timestamp2date_string(ctx['time'])
-
-    if deadline:
-        deadline = deadline[0][0]
-        ny, nm, nd = map(int, now_date.split('-'))
-        dy, dm, dd = map(int, deadline.split('-'))
-
-        d1 = datetime.datetime(ny, nm, nd)
-        d2 = datetime.datetime(dy, dm, dd)
-
-        interval = d2 - d1
-
-        if interval.days < 0:
-            await session.send('试用期已过, 将在五分钟后退群, @我说 token ,并输入相应的token可延长使用时间, 详情请查看: '
-                               'https://jinser.xyz/2020/02/22/%E5%85%B3%E4%BA%8E%E6%94%B6%E8%B4%B9%E5%92%8Ctoken/')
-            await asyncio.sleep(300)
-            # 退群
-            await bot.set_group_leave(group_id=group_id)
-    else:
-        sql_insert2 = (
-            'INSERT INTO deadline VALUES (NULL, ?, ?);'
-        )
-        # +3天
-        add_date = datetime.timedelta(days=3)
-
-        ny, nm, nd = map(int, now_date.split('-'))
-        d1 = datetime.datetime(ny, nm, nd)
-        deadline = d1 + add_date
-        deadline = deadline.strftime("%Y-%m-%d")
-
-        sql_exe(sql_insert2, (group_id, deadline))
-        await session.send('目前正处于试用期, 将在三天后过期, 若要延长使用时间请访问 '
-                           'https://jinser.xyz/2020/02/22/%E5%85%B3%E4%BA%8E%E6%94%B6%E8%B4%B9%E5%92%8Ctoken/ 来查看详情')
 
 
 @on_notice('group_decrease')
