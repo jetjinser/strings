@@ -2,6 +2,8 @@ import datetime
 from sqlite3 import OperationalError
 
 from nonebot import CommandSession, CommandGroup
+from nonebot.permission import SUPERUSER
+
 from random import randint
 import time
 
@@ -40,7 +42,7 @@ async def response_robot(session: CommandSession):
         return
 
 
-@cg.command('init', aliases=['init'])
+@cg.command('init', aliases=['init'], permission=SUPERUSER)
 async def response_init(session: CommandSession):
     try:
 
@@ -60,7 +62,7 @@ async def response_init(session: CommandSession):
         init_now_date = timestamp2date_string(init_now_date)
         for init_group_id in init_group_id_list:
             sql_insert = (
-                'INSERT INTO deadline VALUES (NULL, ?, ?);'
+                'INSERT OR IGNORE INTO deadline VALUES (NULL, ?, ?);'
             )
             # +3天
             i_add_date = datetime.timedelta(days=3)

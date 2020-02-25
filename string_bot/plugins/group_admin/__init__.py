@@ -78,7 +78,7 @@ async def _(session: NoticeSession):
                 await bot.set_group_leave(group_id=group_id)
         else:
             sql_insert2 = (
-                'INSERT INTO deadline VALUES (NULL, ?, ?);'
+                'INSERT OR IGNORE INTO deadline VALUES (NULL, ?, ?);'
             )
             # +3天
             add_date = datetime.timedelta(days=3)
