@@ -137,6 +137,8 @@ user.json
 demo.jpg
 #send.png
 string_bot/data/data.db
+string_bot/sentence_tokenizer.pickle
+string_bot/db.sqlite3
 
 string_bot/data/image
 string_bot/data/language_list.png

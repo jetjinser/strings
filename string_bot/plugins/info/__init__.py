@@ -98,7 +98,7 @@ async def info_steam(session: CommandSession):
     await session.send(msg)
 
 
-@cg.command('steam_list', aliases=['steamsales', 'steam促销列表', 'steam优惠列表'])
+@cg.command('steam_list', aliases=['steam_sales', 'steam促销列表', 'steam优惠列表'])
 async def info_steam(session: CommandSession):
     msg = await get_steam_sale_list()
     await session.send(msg)

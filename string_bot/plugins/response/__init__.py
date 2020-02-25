@@ -43,6 +43,17 @@ async def response_robot(session: CommandSession):
 @cg.command('init', aliases=['init'])
 async def response_init(session: CommandSession):
     try:
+
+        sql = (
+            'CREATE TABLE subscription('
+            'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+            'group_id INT NOT NULL,'
+            'platform TEXT NOT NULL,'
+            'live_id INT NOT NULL'
+            ');'
+        )
+        sql_exe(sql)
+
         init_bot = session.bot
         init_group_id_list = await init_bot.get_group_list()
         init_now_date = time.time()

@@ -1,6 +1,5 @@
 import datetime
 import time
-from sqlite3 import OperationalError
 
 from aiocqhttp.exceptions import ActionFailed
 
@@ -15,7 +14,7 @@ __plugin_name__ = '报时'
 __plugin_usage__ = r"""定点报时"""
 
 
-@nonebot.scheduler.scheduled_job('cron', hour='0')
+@nonebot.scheduler.scheduled_job('cron', day='*')
 async def _():
     bot = nonebot.get_bot()
     group_list = await bot.get_group_list()
@@ -28,7 +27,7 @@ async def _():
         pass
 
 
-@nonebot.scheduler.scheduled_job('cron', hour='6')
+@nonebot.scheduler.scheduled_job('cron', day='*', hour='6')
 async def _():
     bot = nonebot.get_bot()
     group_list = await bot.get_group_list()
@@ -41,16 +40,14 @@ async def _():
         pass
 
 
-@nonebot.scheduler.scheduled_job('cron', hour='9', minute=20)
+@nonebot.scheduler.scheduled_job('cron', day='*', hour='9', minute='20')
 async def _():
     bot = nonebot.get_bot()
     group_list = await bot.get_group_list()
     try:
+        msg = await get_time_line_one()
         for group in group_list:
             group_id = group['group_id']
-
-            msg = await get_time_line_one()
-
             await bot.send_group_msg(group_id=group_id,
                                      message=msg)
     except CQHttpError:
@@ -69,7 +66,7 @@ async def _():
         pass
 
 
-@nonebot.scheduler.scheduled_job('cron', day='*', hour='*', minute='*')
+@nonebot.scheduler.scheduled_job('cron', day='*')
 async def _():
     sql = (
         'SELECT group_id, deadline FROM deadline;'

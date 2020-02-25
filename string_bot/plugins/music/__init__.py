@@ -28,18 +28,6 @@ async def music_163_song(session: CommandSession):
     await session.send(f'[CQ:music,type=163,id={song_id}]')
 
 
-# test start
-@cg.command('song', aliases=['test', '1'])
-async def music_custom_song(session: CommandSession):
-    url = 'https://jinser.xyz/'
-    audio = 'https://aquaminato.moe/voices/a-174.mp3'
-    title = '理解理解'
-    content = '阿夸的理解理解'
-    image = 'https://img.moegirl.org/common/thumb/4/4f/Aqua_P1.png/250px-Aqua_P1.png'
-    await session.send(f'[CQ:music,type=custom,url={url},audio={audio},title={title},content={content},image={image}]')
-# test end
-
-
 # 点歌的参数处理器
 @music_qq_song.args_parser
 @music_163_song.args_parser
