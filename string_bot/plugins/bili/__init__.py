@@ -25,6 +25,18 @@ async def new_animation(session: CommandSession):
     await session.send(result_str)
 
 
+@cg.command('extraction', aliases=['提取b站封面', '提取封面', '封面提取'])
+async def extraction(session: CommandSession):
+    aid = session.get('aid', prompt='请输入av号')
+
+    bot = session.bot
+    boo = await bot.can_send_image()
+    boo = boo['yes']
+
+    pic = await get_bili_pic(aid, boo)
+    await session.send(pic)
+
+
 @new_animation.args_parser
 async def _(session: CommandSession):
     stripped_arg = session.current_arg_text.strip()
@@ -36,4 +48,18 @@ async def _(session: CommandSession):
 
     if not stripped_arg:
         session.pause('⌘国创or番剧？⌘')
+    session.state[session.current_key] = stripped_arg
+
+
+@extraction.args_parser
+async def _(session: CommandSession):
+    stripped_arg = session.current_arg_text.strip()
+
+    if session.is_first_run:
+        if stripped_arg:
+            session.state['aid'] = stripped_arg
+        return
+
+    if not stripped_arg:
+        session.pause('请输入要提取封面的av号')
     session.state[session.current_key] = stripped_arg

@@ -1,6 +1,5 @@
 import requests
 import json
-import time
 
 
 async def get_time_line(a_type):
@@ -27,3 +26,17 @@ async def get_time_line(a_type):
         } for s in today_line]
 
     return result_line
+
+
+async def get_bili_pic(aid, boo: bool):
+    url = 'https://api.bilibili.com/x/web-interface/view'
+    params = {'aid': aid}
+
+    resp = requests.get(url, params)
+
+    pic = resp.json().get('data').get('pic')
+
+    if boo:
+        return f'[CQ:image,file={pic}]'
+    else:
+        return pic

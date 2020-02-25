@@ -36,7 +36,13 @@ def pay_token_j(session: CommandSession):
             dy, dm, dd = map(int, deadline.split('-'))
             d_deadline = datetime.datetime(dy, dm, dd)
 
-            deadline = d_deadline + add_date
+            now = datetime.datetime.now()
+            interval = d_deadline - now
+
+            if interval.days < 0:
+                deadline = now + add_date
+            else:
+                deadline = d_deadline + add_date
 
             deadline = deadline.strftime('%Y-%m-%d')
 
@@ -70,3 +76,14 @@ def pay_token(session: CommandSession):
     sql_exe(sql, (token, duration))
 
     session.finish(token)
+
+
+@cg.command('check_token', aliases=['查询到期', '查询到期时间'], only_to_me=False)
+async def pay_check_token(session: CommandSession):
+    group_id = session.ctx.get('group_id')
+
+    sql_select = (
+        'SELECT deadline FROM deadline WHERE group_id=?;'
+    )
+    deadline = sql_exe(sql_select, (group_id,))[0][0]
+    await session.send(f'到期日期为: {deadline}')
