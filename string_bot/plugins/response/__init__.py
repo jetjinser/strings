@@ -1,4 +1,5 @@
 import datetime
+import sqlite3
 from sqlite3 import OperationalError
 
 from nonebot import CommandSession, CommandGroup
@@ -75,6 +76,44 @@ async def response_init(session: CommandSession):
             sql_exe(sql_insert, (init_group_id.get('group_id'), i_deadline))
     except OperationalError:
         pass
+
+    coon = sqlite3.connect(r'.\data\data.db')
+    cursor = coon.cursor()
+
+    sql = (
+        'select group_id, deadline from deadline;'
+    )
+    cursor.execute(sql)
+
+    values = cursor.fetchall()
+
+    sql_drop = (
+        'DROP TABLE deadline;'
+    )
+    cursor.execute(sql_drop)
+
+    sql_create = (
+        'CREATE TABLE deadline('
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+        'group_id INT NOT NULL,'
+        'deadline TEXT NOT NULL,'
+        'UNIQUE (group_id)'
+        ');'
+    )
+    cursor.execute(sql_create)
+
+    for value in values:
+        group_id = value[0]
+        deadline = value[1]
+
+        sql = (
+            'INSERT OR IGNORE INTO deadline VALUES (NULL, ?, ?);'
+        )
+        cursor.execute(sql, (group_id, deadline))
+
+    cursor.close()
+    coon.commit()
+    coon.close()
 
 
 @cg.command('mua', aliases=['mua', 'mua~'])
