@@ -61,9 +61,9 @@ async def subscription_bilibili_uns(session: CommandSession):
     try:
         if (int(bid),) in exist_live_id:
             sql_delete = (
-                'DELETE FROM subscription WHERE live_id=?;'
+                'DELETE FROM subscription WHERE live_id=? AND group_id=?;'
             )
-            sql_exe(sql_delete, (bid,))
+            sql_exe(sql_delete, (bid, group_id))
 
             uname = await get_bili_uname_by_room_id(bid)
 
