@@ -115,7 +115,7 @@ class ImageProcessing:
             count += 1
 
         sql_select = (
-            'SELECT tips FROM tips ORDER BY RANDOM() limit 1;'
+            'SELECT tips FROM tips WHERE LENGTH(tips) <= 15 ORDER BY RANDOM() limit 1;'
         )
 
         values = sql_exe(sql_select)
@@ -126,7 +126,7 @@ class ImageProcessing:
         font = ImageFont.truetype('./data/REEJI-HonghuangLiGB-SemiBold-2.ttf', 18)
         writer_size = font.getsize(values)
         pix = (230, 230, 230)
-        draw.text(((self._image.size[0] - writer_size[0]) / 2, 585 - 26), values, pix, font=font)
+        draw.text(((self._image.size[0] - writer_size[0]) / 2, 585 - 26), values.replace('\n', ''), pix, font=font)
 
         return target
 

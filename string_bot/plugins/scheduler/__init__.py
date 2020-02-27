@@ -17,6 +17,9 @@ __plugin_usage__ = r"""定点报时"""
 @nonebot.scheduler.scheduled_job('cron', day='*')
 async def _():
     bot = nonebot.get_bot()
+
+    await bot.send_private_msg(user_id=2301583973, message='"零点" 执行了')
+
     group_list = await bot.get_group_list()
     try:
         for group in group_list:
@@ -27,9 +30,12 @@ async def _():
         pass
 
 
-@nonebot.scheduler.scheduled_job('cron', day='*', hour='6')
+@nonebot.scheduler.scheduled_job('cron', day='*', hour=6)
 async def _():
     bot = nonebot.get_bot()
+
+    await bot.send_private_msg(user_id=2301583973, message='"早" 执行了')
+
     group_list = await bot.get_group_list()
     try:
         for group in group_list:
@@ -40,9 +46,12 @@ async def _():
         pass
 
 
-@nonebot.scheduler.scheduled_job('cron', day='*', hour='9', minute='20')
+@nonebot.scheduler.scheduled_job('cron', hour=9, minute=20)
 async def _():
     bot = nonebot.get_bot()
+
+    await bot.send_private_msg(user_id=2301583973, message='"疫情" 执行了')
+
     group_list = await bot.get_group_list()
     try:
         msg = await get_time_line_one()
