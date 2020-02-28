@@ -118,6 +118,12 @@ async def info_steam(session: CommandSession):
     await session.send(msg)
 
 
+@cg.command('knowledge', aliases=['豆知识', '小知识'])
+async def info_knowledge(session: CommandSession):
+    msg = await get_knowledge_from_baidu()
+    await session.send(msg)
+
+
 # 垃圾分类的参数处理器
 @info_garbage_classification.args_parser
 async def _(session: CommandSession):

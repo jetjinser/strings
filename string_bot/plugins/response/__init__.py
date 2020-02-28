@@ -143,7 +143,7 @@ async def response_nihao(session: CommandSession):
         return
 
 
-@cg.command('help', aliases=['help', '怎么用', '怎么玩'])
+@cg.command('help', aliases=['help', '怎么用', '怎么玩', '功能'])
 async def response_help(session: CommandSession):
     if randint(1, 10) > 5:
         await session.send('@我说 帮助 查看功能')

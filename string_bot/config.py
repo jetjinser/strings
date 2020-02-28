@@ -16,3 +16,10 @@ TOO_MANY_VALIDATION_FAILURES_EXPRESSION = (
     '?'
 )
 SESSION_EXPIRE_TIMEOUT = timedelta(minutes=2)
+
+SESSION_CANCEL_EXPRESSION = (
+    '好的',
+    '嗯',
+    '好吧',
+    '了解'
+)

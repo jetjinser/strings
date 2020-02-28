@@ -265,3 +265,19 @@ async def get_edu_news() -> str:
         return split.join([data['name'], data['brief'], 'https://jiemodui.com/N/' + data['id'] + '.html'])
     else:
         return ''
+
+
+async def get_knowledge_from_baidu() -> str:
+    url = 'https://baike.baidu.com/api/vbaike/knowledgelist'
+    params = {'count': 20}
+    header = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'}
+
+    resp = requests.get(url, params, headers=header)
+
+    data = random.choice(resp.json())
+
+    formatted = data['desc'] + '\n' + data['link']
+
+    return formatted
