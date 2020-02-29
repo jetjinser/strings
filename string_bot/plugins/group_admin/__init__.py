@@ -6,6 +6,7 @@ from sqlite3 import OperationalError
 import datetime
 
 import asyncio
+from random import randint
 
 try:
     sql1 = (
@@ -113,6 +114,9 @@ async def _(session: NoticeSession):
 @on_request('friend')
 async def _(session: RequestSession):
     bot = session.bot
+
+    await asyncio.sleep(randint(5, 10))
+
     await session.approve()
 
     ctx = session.ctx.copy()
@@ -134,6 +138,9 @@ async def _(session: RequestSession):
     bot = session.bot
     ctx = session.ctx.copy()
     if ctx['sub_type'] == 'invite':
+
+        await asyncio.sleep(randint(5, 10))
+
         await session.approve()
         group_id = ctx['group_id']
         comment = ctx['comment']
