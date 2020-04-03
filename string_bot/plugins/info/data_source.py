@@ -5,6 +5,29 @@ from datetime import datetime
 import re
 from random import choice
 
+table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF'
+tr = {}
+for i in range(58):
+    tr[table[i]] = i
+s = [11, 10, 3, 8, 4, 6, 2, 9, 5, 7]
+xor = 177451812
+add = 100618342136696320
+
+
+def _dec(x):
+    r = 0
+    for i in range(10):
+        r += tr[x[s[i]]] * 58 ** i
+    return (r - add) ^ xor
+
+
+def _enc(x):
+    x = (x ^ xor) + add
+    r = list('BV          ')
+    for i in range(10):
+        r[s[i]] = table[x // 58 ** i % 58]
+    return ''.join(r)
+
 
 async def get_today_in_history():
     dr = re.compile(r'<[^>]+>', re.S)
@@ -281,3 +304,14 @@ async def get_knowledge_from_baidu() -> str:
     formatted = data['desc'] + '\n' + data['link']
 
     return formatted
+
+
+async def dec(bv):
+    return _dec(bv)
+
+
+async def enc(av):
+    if isinstance(av, int):
+        return _enc(av)
+    else:
+        return

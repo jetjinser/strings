@@ -135,7 +135,7 @@ class ImageProcessing:
         保存图片
         """
         output_img = await self.process()
-        output_img.save('./cache/' + self._name + '.png')
+        output_img.save('./chick_image_cache/' + self._name + '.png')
 
     async def remove(self):
-        os.remove('./cache/' + self._name + '.png')
+        os.remove('./chick_image_cache/' + self._name + '.png')

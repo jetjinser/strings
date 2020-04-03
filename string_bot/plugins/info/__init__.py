@@ -3,14 +3,12 @@ from nonebot import on_natural_language, NLPSession, IntentCommand
 from datetime import date, timedelta
 from jieba import posseg
 
-
 from .data_source import *
 
 __plugin_name__ = '信息'
 __plugin_usage__ = r"""信息服务
 
 指令: 历史上的今天 / 每日一句 / 新闻 / etc."""
-
 
 cg = CommandGroup('info', only_to_me=False)
 
@@ -98,12 +96,6 @@ async def info_steam(session: CommandSession):
     await session.send(msg)
 
 
-@cg.command('steam_list', aliases=['steam_sales', 'steam促销列表', 'steam优惠列表'])
-async def info_steam(session: CommandSession):
-    msg = await get_steam_sale_list()
-    await session.send(msg)
-
-
 @cg.command('isbn', aliases=['isbn', 'isbn查询', 'ISBN', 'ISBN查询', '书号查询'])
 async def info_isbn(session: CommandSession):
     isbn = session.get('isbn', prompt='请输入要查询的书号')
@@ -121,6 +113,23 @@ async def info_steam(session: CommandSession):
 @cg.command('knowledge', aliases=['豆知识', '小知识'])
 async def info_knowledge(session: CommandSession):
     msg = await get_knowledge_from_baidu()
+    await session.send(msg)
+
+
+@cg.command('dec', aliases=['dec', 'bv解码'])
+async def info_dec(session: CommandSession):
+    bv = session.get('bv', prompt='请输入BV号')
+    msg = await dec(bv)
+    await session.send(str(msg))
+
+
+@cg.command('enc', aliases=['enc', 'av编码'])
+async def info_enc(session: CommandSession):
+    av = session.get('bv', prompt='请输入av号')
+    if av[:2] == 'av':
+        av = av[2:]
+    av = int(av)
+    msg = await enc(av)
     await session.send(msg)
 
 
@@ -175,6 +184,36 @@ async def _(session: CommandSession):
 
     if not stripped_arg:
         session.pause('查哪个城市?')
+
+    session.state[session.current_key] = stripped_arg
+
+
+@info_dec.args_parser
+async def _(session: CommandSession):
+    stripped_arg = session.current_arg_text.strip()
+
+    if session.is_first_run:
+        if stripped_arg:
+            session.state['bv'] = stripped_arg.split()[0]
+        return
+
+    if not stripped_arg:
+        session.pause('什么?')
+
+    session.state[session.current_key] = stripped_arg
+
+
+@info_enc.args_parser
+async def _(session: CommandSession):
+    stripped_arg = session.current_arg_text.strip()
+
+    if session.is_first_run:
+        if stripped_arg:
+            session.state['av'] = stripped_arg.split()[0]
+        return
+
+    if not stripped_arg:
+        session.pause('什么?')
 
     session.state[session.current_key] = stripped_arg
 

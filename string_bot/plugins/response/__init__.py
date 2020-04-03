@@ -116,15 +116,15 @@ async def response_init(session: CommandSession):
     coon.close()
 
 
-@cg.command('mua', aliases=['mua', 'mua~'])
-async def response_mua(session: CommandSession):
-    num = randint(1, 10)
-    if num >= 5:
-        await session.send('mua')
-    elif num < 5:
-        await session.send('呕呕!谁想和死肥宅亲亲啊!kimo!')
-    else:
-        return
+# @cg.command('mua', aliases=['mua', 'mua~'])
+# async def response_mua(session: CommandSession):
+#     num = randint(1, 10)
+#     if num >= 5:
+#         await session.send('mua')
+#     elif num < 5:
+#         await session.send('呕呕!谁想和死肥宅亲亲啊!kimo!')
+#     else:
+#         return
 
 
 @cg.command('zaima', aliases=['zaima', 'wei,zaima', 'wei，zaima'])
