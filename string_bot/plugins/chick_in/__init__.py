@@ -72,7 +72,6 @@ async def enable(session: CommandSession):
         'REPLACE INTO setting VALUES (?, ?, ?, ?);'
     )
     sql_exe(sql_disable, (None, group_id, 'live', enable_i))
-    await session.send(str(off_dict))
     update()
 
 
@@ -82,17 +81,14 @@ async def chick_in_cmd(session: CommandSession):
 
     off = off_dict.get(int(group_id))
 
-    await session.send(str(off))
-
     if isinstance(off, bool):
         if not off:
             return
 
-    try:
+    async def _chick_in():
         uid = session.ctx['sender']['user_id']
 
         if check_in_interval_judgment(uid):
-
             chick_in(uid)
 
             image = await get_image(uid)
@@ -117,8 +113,12 @@ async def chick_in_cmd(session: CommandSession):
                 await session.send(r'[CQ:image,file=send.png]')
         else:
             await session.send('您今天已经签到过了')
+
+    try:
+        await _chick_in()
     except (IndexError, TypeError):
         user_registration(session.ctx)
+        await _chick_in()
 
 
 @cg.command('chick_in_check', aliases=['查询', '个人信息'])
