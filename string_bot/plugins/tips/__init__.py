@@ -59,7 +59,7 @@ async def tips_hs(session: CommandSession):
     msg = await get_ust_msg(user_id, False)
 
     if len(msg) > 277:
-        await session.finish('消息过长, 请私聊查询')
+        await session.finish('消息过长, 无法发送')
 
     await session.send(str(msg))
 
@@ -79,7 +79,7 @@ async def tips_delete(session: CommandSession):
 async def tips_audit(session: CommandSession):
     value, aud_id = await audit_ust()
     if value:
-        aud = session.get('aud', prompt=value)
+        aud = session.get('aud', prompt=str(value))
         audit_bool = await audit(aud_id, aud)
 
         if audit_bool:
@@ -88,7 +88,7 @@ async def tips_audit(session: CommandSession):
         else:
             await session.send('ok')
     else:
-        await session.send('没了')
+        session.finish('没了')
 
 
 # 提交tips的参数处理器

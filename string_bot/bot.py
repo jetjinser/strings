@@ -1,3 +1,6 @@
+"""
+main file
+"""
 from os import path
 
 # import logging
@@ -5,6 +8,7 @@ import nonebot
 # from nonebot.log import logger
 
 import config
+
 # logger.setLevel(logging.DEBUG)
 
 if __name__ == '__main__':

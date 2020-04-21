@@ -16,15 +16,21 @@ cg = CommandGroup('music', only_to_me=False)
 
 @cg.command('qq_song', aliases=cmd_qq)
 async def music_qq_song(session: CommandSession):
+    session.finish('肥肠爆芡, 正在努力开发qq音乐点歌')
     keyword = session.get('keyword', prompt='你想点播哪首歌')
-    song_id = await search_song(keyword, 'tencent')
+    song_id = await search_song(keyword, platform='tencent')
+    if not song_id:
+        session.finish('发生未知错误或歌曲不存在')
     await session.send(f'[CQ:music,type=qq,id={song_id}]')
 
 
 @cg.command('163_song', aliases=cmd_163)
 async def music_163_song(session: CommandSession):
+    # session.finish('遇到未知错误, 无法分享')
     keyword = session.get('keyword', prompt='你想点播哪首歌')
-    song_id = await search_song(keyword, 'netease')
+    song_id = await search_song(keyword, platform='netease')
+    if not song_id:
+        session.finish('发生未知错误或歌曲不存在')
     await session.send(f'[CQ:music,type=163,id={song_id}]')
 
 

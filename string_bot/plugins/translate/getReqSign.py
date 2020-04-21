@@ -1,12 +1,12 @@
 import hashlib
-from urllib.parse import quote
+from urllib.parse import quote_plus
 
 
 async def get_req_sign(params, appkey):
     a_list = []
     for key, value in sorted(params.items()):
         if value != '':
-            value = quote(value, safe='')
+            value = quote_plus(value, safe='')
             a_list.append(key + '=' + value + '&')
 
     a_list.append('app_key=' + appkey)

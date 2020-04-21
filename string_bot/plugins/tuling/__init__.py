@@ -89,7 +89,7 @@ async def call_tuling_api(session: CommandSession, text: str) -> Optional[str]:
                             if result['resultType'] == 'text':
                                 # 返回文本类型的回复
                                 resp = result['values']['text']
-                                if resp == '请求次数超限制!':
+                                if resp == '请求次数超限制!' or ('http' in resp):
                                     continue
                                 return resp
         except (aiohttp.ClientError, json.JSONDecodeError, KeyError):

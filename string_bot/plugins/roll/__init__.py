@@ -12,7 +12,7 @@ async def roll_num(session: CommandSession):
 
     n_list = []
 
-    for i in range(roll_1):
+    for i in range(int(roll_1)):
         n_list.append(randint(1, int(roll_2)))
 
     m_list = map(str, n_list)

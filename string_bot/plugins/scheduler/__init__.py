@@ -18,8 +18,6 @@ __plugin_usage__ = r"""定点报时"""
 async def _():
     bot = nonebot.get_bot()
 
-    await bot.send_private_msg(user_id=2301583973, message='"零点" 执行了')
-
     group_list = await bot.get_group_list()
     try:
         for group in group_list:

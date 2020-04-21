@@ -25,6 +25,12 @@ async def info_one_sentence_a_day(session: CommandSession):
     await session.send(msg)
 
 
+@cg.command('hitokoto', aliases=['一言'])
+async def info_hitokoto(session: CommandSession):
+    msg = await get_hitokoto()
+    await session.send(msg)
+
+
 @cg.command('five_sayings', aliases=['five语录', '废物语录', '二次元语录'])
 async def info_five_sayings(session: CommandSession):
     msg = await get_five_sayings()

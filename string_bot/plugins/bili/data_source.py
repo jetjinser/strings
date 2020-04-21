@@ -1,5 +1,7 @@
-import requests
+from typing import Union
+
 import json
+import requests
 
 
 async def get_time_line(a_type):
@@ -28,7 +30,7 @@ async def get_time_line(a_type):
     return result_line
 
 
-async def get_bili_pic(aid, boo: bool):
+async def get_bili_pic(aid, boo: bool) -> Union[str, None]:
     url = 'https://api.bilibili.com/x/web-interface/view'
     params = {'aid': aid}
 
@@ -37,6 +39,7 @@ async def get_bili_pic(aid, boo: bool):
     pic = resp.json().get('data').get('pic')
 
     if boo:
-        return f'[CQ:image,file={pic}]'
+        ret = f'[CQ:image,file={pic}]'
     else:
-        return pic
+        ret = pic
+    return ret

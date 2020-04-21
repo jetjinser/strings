@@ -13,7 +13,7 @@ class ImageProcessing:
     def __init__(self, im, txt, small_size: int = 256, name: str = 'demo'):
         """
         初始化
-        :param im:图片地址
+        :param im: 图片地址
         :param txt: 文字
         :param small_size: 小图标的尺寸(宽高)
         :param name: 处理后的图片名
@@ -112,7 +112,7 @@ class ImageProcessing:
             draw = ImageDraw.Draw(target)
             draw.text(where, i, pix, font=font)
 
-            count += 1
+        count += 1
 
         sql_select = (
             'SELECT tips FROM tips WHERE LENGTH(tips) <= 15 ORDER BY RANDOM() limit 1;'
@@ -135,7 +135,7 @@ class ImageProcessing:
         保存图片
         """
         output_img = await self.process()
-        output_img.save('./chick_image_cache/' + self._name + '.png')
+        output_img.save('chick_image_cache/' + self._name + '.png')
 
     async def remove(self):
-        os.remove('./chick_image_cache/' + self._name + '.png')
+        os.remove('chick_image_cache/' + self._name + '.png')

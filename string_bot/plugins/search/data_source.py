@@ -7,7 +7,13 @@ def shortlink(long_url: str) -> str:
     params = {'url': long_url}
     url = host + path
 
-    r = requests.get(url, params=params)
+    headers = {
+        'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+            ' AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'
+    }
+
+    r = requests.get(url, params=params, headers=headers, verify=False)
     resp = r.json()
     return resp['short_url']
 

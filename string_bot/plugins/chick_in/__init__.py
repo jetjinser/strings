@@ -1,11 +1,17 @@
-﻿from sqlite3 import OperationalError
+﻿"""
+check in
+"""
+from sqlite3 import OperationalError
 from typing import Dict, Union, List
 
 from nonebot import CommandGroup, CommandSession
-from .chick_in_system import *
+from .check_in_system import *
 from .check_in_image import ImageProcessing
 from .data_source import get_image
 from nonebot.permission import SUPERUSER
+
+import base64
+from aiocqhttp import MessageSegment
 
 __plugin_name__ = '签到'
 __plugin_usage__ = r"""签到服务
@@ -50,6 +56,9 @@ def update():
             group_id = i[0]
             if not off_dict.get(group_id):
                 off_dict[group_id] = False
+
+
+update()
 
 
 @cg.command('enable', aliases=['签到开关'], permission=SUPERUSER)
@@ -110,7 +119,10 @@ async def chick_in_cmd(session: CommandSession):
             if not boo:
                 await session.send(text)
             else:
-                await session.send(r'[CQ:image,file=send.png]')
+                with open('./chick_image_cache/send.png', 'rb') as f:
+                    base = base64.b64encode(f.read())
+                img = MessageSegment.image(f'base64://{base.decode()}')
+                await session.send(img)
         else:
             await session.send('您今天已经签到过了')
 

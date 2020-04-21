@@ -10,6 +10,8 @@ __plugin_usage__ = r"""根据链接自动返回相关信息
 
 目前支持: bilibili的av/cv号"""
 
+from ..info import dec
+
 cg = CommandGroup('link', only_to_me=False)
 
 
@@ -47,15 +49,21 @@ async def bili_cv(session: CommandSession):
 async def _(session: NLPSession):
     stripped_msg = session.msg_text.strip()
 
-    av_pattern = re.compile(r'^.*av(\d{3,8}).*$', re.I)
+    av_pattern = re.compile(r'^.*av(\d{3,11}).*$', re.I)
+    bv_pattern = re.compile(r'^.*(BV|bv|Bv|bV)(\w{10}).*$', re.I)
     cv_pattern = re.compile(r'^.*cv(\d{3,7}).*$', re.I)
 
     av_match = av_pattern.match(stripped_msg)
+    bv_match = bv_pattern.match(stripped_msg)
     cv_match = cv_pattern.match(stripped_msg)
 
     if av_match:
         return IntentCommand(100, ('link', 'bili_av'), args={'av': av_match.group(1).lower()})
     elif cv_match:
         return IntentCommand(100, ('link', 'bili_cv'), args={'cv': cv_match.group(1).lower()})
+    elif bv_match:
+        bv = bv_match.group(1) + bv_match.group(2)
+        av = await dec(bv)
+        return IntentCommand(100, ('link', 'bili_av'), args={'av': av})
     else:
         return

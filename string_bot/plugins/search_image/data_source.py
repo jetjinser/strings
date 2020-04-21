@@ -26,9 +26,11 @@ async def to_isearch_pixivic(original_image_url, boo: bool) -> str:
 
         if not xrestrict:
             img_url = img_url.replace('ximg.net', 'ixiv.cat')
+            img_url_1 = img_url.replace('.jpg', '-1.jpg')
+
             msg = title + '\n图片id：' + str(img_id) + '\n作者：' + name + '    作者id：' + str(id)
             if boo:
-                msg = f'[CQ:image,file={img_url}]' + msg
+                msg = f'[CQ:image,file={img_url}][CQ:image,file={img_url_1}]' + msg
             else:
                 msg = img_url + msg
         else:

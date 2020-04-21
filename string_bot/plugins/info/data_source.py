@@ -69,9 +69,14 @@ async def get_one_sentence_a_day():
 
 async def get_five_sayings():
     url = 'https://api.ooopn.com/yan/api.php'
-    r = requests.get(url)
+    headers = {
+        'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+            ' AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'
+    }
+    r = requests.get(url, headers=headers)
     response_dict = r.json()
-    return response_dict['hitokoto']
+    return response_dict['hitokoto'] + '\n    from ' + response_dict['source']
 
 
 async def get_garbage_classification(arg):
@@ -297,13 +302,19 @@ async def get_knowledge_from_baidu() -> str:
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                       'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'}
 
-    resp = requests.get(url, params, headers=header)
+    resp = requests.get(url, params, headers=header, verify=False)
 
     data = random.choice(resp.json())
 
     formatted = data['desc'] + '\n' + data['link']
 
     return formatted
+
+
+async def get_hitokoto() -> str:
+    url = 'https://api.imjad.cn/hitokoto/'
+    resp = requests.get(url)
+    return resp.text
 
 
 async def dec(bv):

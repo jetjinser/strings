@@ -1,3 +1,6 @@
+"""
+bili plugins __init__.py
+"""
 from nonebot import CommandGroup, CommandSession
 from .data_source import *
 

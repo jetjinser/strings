@@ -1,3 +1,6 @@
+"""
+button plugin __init__.py
+"""
 from nonebot import CommandGroup, CommandSession
 from .voice_source import *
 

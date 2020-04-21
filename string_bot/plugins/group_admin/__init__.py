@@ -3,10 +3,10 @@ from nonebot import on_notice, NoticeSession
 from .process import *
 from sql_exe import *
 from sqlite3 import OperationalError
-import datetime
-
-import asyncio
-from random import randint
+# import datetime
+#
+# import asyncio
+# from random import randint
 
 try:
     sql1 = (
@@ -136,19 +136,19 @@ async def _(session: RequestSession):
 
 @on_request('group')
 async def _(session: RequestSession):
-    # bot = session.bot
-    # ctx = session.ctx.copy()
-    # if ctx['sub_type'] == 'invite':
-    #
-    #     await asyncio.sleep(randint(5, 10))
-    #
-    #     await session.approve()
-    #     group_id = ctx['group_id']
-    #     comment = ctx['comment']
-    #     time = timestamp2string(ctx['time'])
-    #     await bot.send_private_msg(user_id=2301583973, message=f'I was invited to join the 『{group_id}』 group, '
-    #                                                            f'the comment is 『{comment}』, '
-    #                                                            f'『{time}』')
-    # else:
-    #     return
+    bot = session.bot
+    ctx = session.ctx.copy()
+    if ctx['sub_type'] == 'invite':
+
+        # await asyncio.sleep(randint(5, 10))
+
+        await session.approve()
+        group_id = ctx['group_id']
+        comment = ctx['comment']
+        time = timestamp2string(ctx['time'])
+        await bot.send_private_msg(user_id=2301583973, message=f'I was invited to join the 『{group_id}』 group, '
+                                                               f'the comment is 『{comment}』, '
+                                                               f'『{time}』')
+    else:
+        return
     await session.reject()
