@@ -99,7 +99,8 @@ async def to_isearch_saucenao(original_image_url, boo: bool):
 
     pixiv_id = data.get('pixiv_id')
     if pixiv_id:
-        img_url = f'https://pixiv.cat/{pixiv_id}.jpg'
+        img_url = f'https://pixiv.cat/{pixiv_id}.jpg' if is_active(
+            f'https://pixiv.cat/{pixiv_id}.jpg') else '结果图片不止一张, 无法显示\n'
         member_name = data['member_name']
         member_id = data['member_id']
         msg = '\n' + title + '\n图片id：' + str(pixiv_id) + '\n相似度：' + str(similarity) + \
@@ -113,12 +114,14 @@ async def to_isearch_saucenao(original_image_url, boo: bool):
             img_url = header['thumbnail']
             msg = '\n' + title + '\n相似度：' + str(similarity) + '%\n' + ext_url
             if boo:
-                msg = f'[CQ:image,file={img_url}]' + msg
+                msg = f'[CQ:image,file={img_url}]' + msg if is_active(
+                    img_url) else '结果图片不止一张, 无法显示\n'
             else:
                 msg = img_url + msg
         except TypeError:
             pixiv_id = data['source'].split('/')[-1]
-            img_url = f'https://pixiv.cat/{pixiv_id}.jpg'
+            img_url = f'https://pixiv.cat/{pixiv_id}.jpg' if is_active(
+                f'https://pixiv.cat/{pixiv_id}.jpg') else '结果图片不止一张, 无法显示\n'
             msg = '\n' + '作者 ' + data['creator'] + '\nmaterial ' + data['material'] + '\n' + data['ext_urls'][0]
             if boo:
                 msg = f'[CQ:image,file={img_url}]' + msg
@@ -142,3 +145,16 @@ async def _get_anime_detail(anilist_id):
         site_url = '网址暂无数据'
 
     return img_id, site_url
+
+
+def is_active(url: str) -> bool:
+    """
+    404 or not
+    :param url: url
+    :return: True: is active False: is not active
+    """
+    resp = requests.head(url)
+    if resp.status_code == 200:
+        return True
+    else:
+        return False
