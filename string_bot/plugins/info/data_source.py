@@ -317,6 +317,12 @@ async def get_hitokoto() -> str:
     return resp.text
 
 
+async def marketing_gen(subject: str, incident: str, another_way_of_saying: str) -> str:
+    return f'''    {subject}{incident}是怎么回事呢？{subject}相信大家都很熟悉，但是{subject}{incident}是怎么回事呢，下面就让小编带大家一起了解吧。
+    {subject}{incident}，其实就是{another_way_of_saying}，大家可能会很惊讶{subject}怎么会{incident}呢？但事实就是这样，小编也感到非常惊讶。
+    这就是关于{subject}{incident}的事情了，大家有什么想法呢，欢迎在评论区告诉小编一起讨论哦！'''
+
+
 async def dec(bv):
     return _dec(bv)
 

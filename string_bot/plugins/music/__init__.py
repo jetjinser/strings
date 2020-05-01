@@ -16,7 +16,6 @@ cg = CommandGroup('music', only_to_me=False)
 
 @cg.command('qq_song', aliases=cmd_qq)
 async def music_qq_song(session: CommandSession):
-    session.finish('肥肠爆芡, 正在努力开发qq音乐点歌')
     keyword = session.get('keyword', prompt='你想点播哪首歌')
     song_id = await search_song_qq(keyword)
     if not song_id:

@@ -1,5 +1,4 @@
 from nonebot import CommandGroup, CommandSession
-from pyquery import PyQuery as pq
 from .data_source import *
 import random
 
@@ -22,7 +21,20 @@ async def scp(session: CommandSession):
     elif q_type.find("随机") > -1:
         q_type_int = 2
     else:
-        q_type_int = -1
+        try:
+            assert int(q_type)
+
+            if len(q_type) == 1:
+                q_type = '00' + q_type
+            elif len(q_type) == 2:
+                q_type = '0' + q_type
+
+            msg = await get_scp_by_num(q_type)
+            session.finish(msg)
+            return
+        except ValueError:
+            q_type_int = -1
+
     if q_type_int == 0 or q_type_int == 1:
         scp_list = await get_latest_article(q_type_int, 1)
         for s in scp_list[:5]:

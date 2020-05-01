@@ -1,6 +1,7 @@
 import requests
 import json
 from pyquery import PyQuery as pq
+import httpx
 
 
 async def get_scp_daily(index):
@@ -37,3 +38,13 @@ async def get_latest_article(page_type, page_index):
         new_article['rank'] = info_list[2].text()
         article_list.append(new_article)
     return article_list
+
+
+async def get_scp_by_num(scp_num) -> str:
+    url = f'http://scp-wiki-cn.wikidot.com/scp-{scp_num}'
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(url)
+    html = pq(resp.text)
+    page = html('#page-content')
+    msg = page.text()
+    return msg if len(msg <= 256) else ''

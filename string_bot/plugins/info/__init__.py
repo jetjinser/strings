@@ -139,6 +139,32 @@ async def info_enc(session: CommandSession):
     await session.send(msg)
 
 
+@cg.command('marketing', aliases=['营销号生成器'])
+async def info_marketing(session: CommandSession):
+    subject = session.get('subject', prompt='主体是？')
+    incident = session.get('incident', prompt='事件是？')
+    another_way_of_saying = session.get('another_way_of_saying', prompt='另一种说法是？')
+    msg = await marketing_gen(subject, incident, another_way_of_saying)
+    await session.send(msg)
+
+
+@info_marketing.args_parser
+async def _(session: CommandSession):
+    stripped_arg = session.current_arg_text.strip()
+
+    if session.is_first_run:
+        if stripped_arg:
+            session.state['subject'] = stripped_arg.split()[0]
+            session.state['incident'] = stripped_arg.split()[1]
+            session.state['another_way_of_saying'] = stripped_arg.split()[2]
+        return
+
+    if not stripped_arg:
+        session.pause('什')
+
+    session.state[session.current_key] = stripped_arg
+
+
 # 垃圾分类的参数处理器
 @info_garbage_classification.args_parser
 async def _(session: CommandSession):
